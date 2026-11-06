@@ -69,7 +69,6 @@ h2{font-size:28px;font-weight:600;letter-spacing:-.3px}
 .gitem:hover{border-color:rgba(125,180,255,.45);transform:translateY(-2px)}
 .gitem img{display:block;width:100%;height:auto}
 .gitem .cap{padding:12px 16px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
-.gitem:last-child{grid-column:1/-1}
 
 /* 步骤 */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
@@ -118,7 +117,6 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
   h2{font-size:23px}
   section{padding:52px 0}
   .cards,.steps,.gallery,.dl{grid-template-columns:1fr}
-  .gitem:last-child{grid-column:auto}
   .wrap{padding:0 18px}
 }
 </style>
@@ -210,7 +208,7 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
       <div class="sec-head">
         <div class="kicker">Screenshots</div>
         <h2>应用长什么样</h2>
-        <p class="sec-desc">以下为 v2.6.14 在 Android TV 实机上的界面，点击任意图片可放大查看。</p>
+        <p class="sec-desc">以下为 v2.6.14 的电视端实机界面与配套的网页端，点击任意图片可放大查看。</p>
       </div>
       <div class="gallery">
         <div class="gitem"><img src="screenshots/01-home.png" alt="首页"><div class="cap">首页 · 文件分类与功能入口</div></div>
@@ -220,6 +218,7 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
         <div class="gitem"><img src="screenshots/05-settings.png" alt="应用设置"><div class="cap">应用设置 · 主题、路径、屏幕方向</div></div>
         <div class="gitem"><img src="screenshots/07-more.png" alt="更多功能"><div class="cap">更多功能 · 内存、系统设置、电视互联</div></div>
         <div class="gitem"><img src="screenshots/08-file-manager.png" alt="文件管理器"><div class="cap">文件管理器 · 浏览电视本机目录</div></div>
+        <div class="gitem"><img src="screenshots/09-web-client.png" alt="网页端"><div class="cap">网页端 · 手机 / 电脑扫码后拖拽上传、管理文件</div></div>
       </div>
     </div>
   </section>
