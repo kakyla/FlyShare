@@ -120,9 +120,9 @@ https://github.com/kakyla/FlyShare/releases/latest/download/update.json
 
 ```json
 {
-  "versionCode": 20614,
-  "versionName": "2.6.14",
-  "apkUrl": "https://<你的地址>/FlyShare-2.6.14.apk",
+  "versionCode": 20615,
+  "versionName": "2.6.15",
+  "apkUrl": "https://<你的地址>/FlyShare-2.6.15.apk",
   "apkSha256": "<APK 的 SHA-256 指纹>",
   "updateLog": "更新内容说明"
 }
