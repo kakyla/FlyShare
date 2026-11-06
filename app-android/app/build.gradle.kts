@@ -23,7 +23,7 @@ android {
         versionCode = APP_VERSION_NAME.split(".").let { it[0].toInt() * 10000 + it[1].toInt() * 100 + it[2].toInt() }
 
         // 更新配置双源（2026-11-06）：Gitee 优先（国内 TV 可达、仓库文件固定地址），GitHub Releases 兜底。
-        // 两者都可由本机 gradle.properties 覆盖；fork 者请把默认地址改成自己的仓库。
+        // 两者都可由本机 gradle.properties 覆盖；开源默认值公开，不含任何私有地址。
         val updateJsonUrl = project.findProperty("UPDATE_JSON_URL") as String?
             ?: "https://gitee.com/kakyla/FlyShare/raw/master/update.json"
         val updateJsonUrlFallback = project.findProperty("UPDATE_JSON_URL_FALLBACK") as String?

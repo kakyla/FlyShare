@@ -84,79 +84,91 @@ fun DeviceListScreen(
             scrollable = false,
             applyBodyPadding = false,
         ) { _ ->
-            // 手动添加入口：跨网段时自动搜索不到，由用户填入对方 IP 互联（无需端口）
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = if (compact) TvTheme.dimens.spacingXl else TvTheme.dimens.spacing3Xl,
-                        vertical = TvTheme.dimens.spacingMd
-                    ),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                ActionTileButton(
-                    icon = Icons.Default.Add,
-                    label = stringResource(id = R.string.interconnect_manual_add),
-                    color = TvTheme.colors.tileColor3,
-                    onClick = { showAddDialog = true },
-                    compact = compact,
-                    modifier = if (compact) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier.width(TvTheme.dimens.actionPanelWidth)
-                    }
-                )
-            }
-
-            if (devices.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(
-                            horizontal = if (compact) TvTheme.dimens.spacingXl else TvTheme.dimens.spacing3Xl
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.interconnect_searching),
-                            color = TvTheme.colors.textSecondary,
-                            fontSize = TvTheme.dimens.fontCol1Text
-                        )
-                        Spacer(modifier = Modifier.height(TvTheme.dimens.spacingLg))
-                        Text(
-                            text = stringResource(id = R.string.interconnect_searching_hint),
-                            color = TvTheme.colors.textSecondary.copy(alpha = 0.7f),
-                            fontSize = TvTheme.dimens.fontSmall,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            } else {
-                // 同型号电视的设备名相同（都是 Build.MODEL），重名时在标题追加 IP 尾段区分；
-                // 手动添加的设备标题本来就是 IP，无需追加。
-                val duplicateNames = devices
-                    .filter { !it.deviceId.startsWith("manual-") }
-                    .groupingBy { it.deviceName }
-                    .eachCount()
-                    .filterValues { it > 1 }
-                    .keys
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(gridColumns),
+            // 2026-11-06 修复横竖屏卡片重叠：ScreenScaffold 的内容区是 Box（叠加容器），
+            // 原先「手动添加」Row 与设备网格并列放进 content，两者各画各的、直接压在一起。
+            // 这里用 Column 纵向排开，下半部分用 weight(1f) 吃掉剩余高度，
+            // 不再让 fillMaxSize() 把整块又铺满叠加容器。compact 判定与网格列数保持不变。
+            Column(modifier = Modifier.fillMaxSize()) {
+                // 手动添加入口：跨网段时自动搜索不到，由用户填入对方 IP 互联（无需端口）
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(
                             horizontal = if (compact) TvTheme.dimens.spacingXl else TvTheme.dimens.spacing3Xl,
-                            vertical = TvTheme.dimens.spacingXl
+                            vertical = TvTheme.dimens.spacingMd
                         ),
-                    horizontalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingLg),
-                    verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingLg)
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    items(devices, key = { it.deviceId }) { device ->
-                        DeviceGridItem(
-                            device = device,
-                            showIpSuffix = device.deviceName in duplicateNames,
-                            onClick = { onDeviceSelected(device) }
-                        )
+                    ActionTileButton(
+                        icon = Icons.Default.Add,
+                        label = stringResource(id = R.string.interconnect_manual_add),
+                        color = TvTheme.colors.tileColor3,
+                        onClick = { showAddDialog = true },
+                        compact = compact,
+                        modifier = if (compact) {
+                            Modifier.fillMaxWidth()
+                        } else {
+                            Modifier.width(TvTheme.dimens.actionPanelWidth)
+                        }
+                    )
+                }
+
+                if (devices.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(
+                                horizontal = if (compact) TvTheme.dimens.spacingXl else TvTheme.dimens.spacing3Xl
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.interconnect_searching),
+                                color = TvTheme.colors.textSecondary,
+                                fontSize = TvTheme.dimens.fontCol1Text
+                            )
+                            Spacer(modifier = Modifier.height(TvTheme.dimens.spacingLg))
+                            Text(
+                                text = stringResource(id = R.string.interconnect_searching_hint),
+                                color = TvTheme.colors.textSecondary.copy(alpha = 0.7f),
+                                fontSize = TvTheme.dimens.fontSmall,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                } else {
+                    // 同型号电视的设备名相同（都是 Build.MODEL），重名时在标题追加 IP 尾段区分；
+                    // 手动添加的设备标题本来就是 IP，无需追加。
+                    val duplicateNames = devices
+                        .filter { !it.deviceId.startsWith("manual-") }
+                        .groupingBy { it.deviceName }
+                        .eachCount()
+                        .filterValues { it > 1 }
+                        .keys
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(gridColumns),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(
+                                horizontal = if (compact) TvTheme.dimens.spacingXl else TvTheme.dimens.spacing3Xl,
+                                vertical = TvTheme.dimens.spacingXl
+                            ),
+                        horizontalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingLg),
+                        verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingLg)
+                    ) {
+                        items(devices, key = { it.deviceId }) { device ->
+                            DeviceGridItem(
+                                device = device,
+                                showIpSuffix = device.deviceName in duplicateNames,
+                                onClick = { onDeviceSelected(device) }
+                            )
+                        }
                     }
                 }
             }
