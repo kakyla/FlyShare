@@ -10,9 +10,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * 更新仓库
- * 负责与远程服务器交互，获取最新的更新配置。
- * 架构解耦：目前使用阿里云 OSS，未来可无缝切换到 GitHub/Gitee 等双源方案。
+ * 更新仓库：负责与远程服务器交互，获取最新的更新配置。
+ * 更新源地址由 BuildConfig.UPDATE_JSON_URL 注入，不写死在源码里；正式发布走 GitHub / Gitee Releases。
+ * 拉取用 HttpURLConnection（不带 Referer），下载 APK 走系统 DownloadManager，两者都跟随 302 重定向。
  */
 class UpdateRepository {
 

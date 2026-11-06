@@ -22,8 +22,8 @@ android {
         versionName = APP_VERSION_NAME
         versionCode = APP_VERSION_NAME.split(".").let { it[0].toInt() * 10000 + it[1].toInt() * 100 + it[2].toInt() }
 
-        // 更新配置地址（2026-11-05 开源准备）：本地配置的 UPDATE_JSON_URL 优先（私有发布源），
-        // 未配置时默认走本项目 GitHub Releases；fork 者请把下面地址改成自己的仓库
+        // 更新配置地址：本机 UPDATE_JSON_URL 优先，未配置时走本项目 GitHub Releases。
+        // fork 者请把下面地址改成自己的仓库。
         val updateJsonUrl = project.findProperty("UPDATE_JSON_URL") as String?
             ?: "https://github.com/kakyla/FlyShare/releases/latest/download/update.json"
         buildConfigField("String", "UPDATE_JSON_URL", "\"$updateJsonUrl\"")

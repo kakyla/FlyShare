@@ -134,7 +134,7 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
                             val currentVersionCode = appVersionCodeResult.getOrThrow()
                             if (updateInfo.versionCode.toLong() > currentVersionCode) {
                                 // 复用已下载包前必须做双重校验：
-                                // 1) versionCode 与 apkUrl 均一致（防止 OSS 覆盖新包但 versionCode 未变时被误用旧缓存）
+                                // 1) versionCode 与 apkUrl 均一致（防止服务端覆盖新包但 versionCode 未变时被误用旧缓存）
                                 // 2) 实际下载文件仍存在且非空（防止 DownloadManager 记录 SUCCESSFUL 但文件已被清理导致“解析出错”）
                                 val savedVersion = prefs.getInt(PREFS_KEY_LAST_DOWNLOAD_VERSION, -1)
                                 val savedUrl = prefs.getString(PREFS_KEY_LAST_DOWNLOAD_URL, "") ?: ""
