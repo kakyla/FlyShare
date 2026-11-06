@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="FlyShare（TV 快传）—— 局域网内的电视 / 车机文件传输工具，开源、免费、无需数据线。">
 <title>FlyShare · TV 快传 — 让电视和手机在同一个 WiFi 下互传文件</title>
+<link rel="icon" type="image/png" href="app-icon.png">
 <style>
 :root{
   --bg:#08111f; --bg2:#0c1a2d; --card:#12243c; --card2:#162b47;
@@ -21,8 +22,8 @@ a{color:inherit;text-decoration:none}
 header{position:sticky;top:0;z-index:30;background:rgba(8,17,31,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;letter-spacing:.2px}
-.mark{width:30px;height:30px;border-radius:8px;background:var(--blue);display:grid;place-items:center;flex:none}
-.mark svg{width:18px;height:18px}
+.mark{width:30px;height:30px;border-radius:8px;overflow:hidden;flex:none;background:var(--blue)}
+.mark img{display:block;width:100%;height:100%}
 .navlinks{display:flex;gap:26px;font-size:14px;color:var(--muted)}
 .navlinks a:hover{color:var(--text)}
 .navcta{border:1px solid rgba(125,180,255,.45);color:var(--blue2);padding:7px 15px;border-radius:8px;font-size:13px;white-space:nowrap}
@@ -64,11 +65,38 @@ h2{font-size:28px;font-weight:600;letter-spacing:-.3px}
 .card p{font-size:14px;color:var(--muted)}
 
 /* 截图预览 */
-.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.gitem{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in;transition:.2s}
-.gitem:hover{border-color:rgba(125,180,255,.45);transform:translateY(-2px)}
-.gitem img{display:block;width:100%;height:auto}
-.gitem .cap{padding:12px 16px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+/* 双样机轮播：电视外框 + 手机外框，各自独立切换 */
+.devices{display:grid;grid-template-columns:1.32fr .68fr;gap:30px;align-items:start}
+.devcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.devhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.devhead b{font-size:16px;font-weight:600}
+.devhead span{font-size:12px;color:var(--muted)}
+.tv{padding-bottom:8px}
+.tv-body{background:#0a1424;border:9px solid #1c2c42;border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.tv-screen{position:relative;aspect-ratio:16/9;background:#050c17;overflow:hidden;display:grid;place-items:center}
+.tv-screen img{width:100%;height:100%;object-fit:contain;display:block;cursor:zoom-in}
+.tv-stand{width:86px;height:12px;margin:0 auto;background:#1c2c42;border-radius:0 0 6px 6px}
+.tv-base{width:190px;height:8px;margin:2px auto 0;background:#16253a;border-radius:50%}
+.phone{width:min(100%,268px);margin:0 auto;padding:12px;background:#0a1424;border:2px solid #26374f;border-radius:38px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.phone-notch{width:74px;height:6px;margin:2px auto 10px;background:#26374f;border-radius:99px}
+.phone-screen{position:relative;aspect-ratio:9/16;background:#050c17;border-radius:28px;overflow:hidden;display:grid;place-items:center}
+.phone-screen img{width:100%;height:100%;object-fit:contain;display:block;cursor:zoom-in}
+.phone-bar{width:78px;height:4px;margin:10px auto 2px;background:#26374f;border-radius:99px}
+.devctrl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:20px}
+.devctrl button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);font-size:18px;line-height:1;cursor:pointer;transition:.18s}
+.devctrl button:hover{border-color:var(--blue);background:rgba(77,148,255,.12)}
+.dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:230px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(157,178,206,.35);cursor:pointer;transition:.18s}
+.dots i.on{background:var(--blue2);transform:scale(1.25)}
+.devcap{text-align:center;font-size:13px;color:var(--muted);margin-top:12px;min-height:22px}
+@media(max-width:900px){
+  .devices{grid-template-columns:1fr}
+  .phone{width:min(100%,268px)}
+}
+@media(max-width:600px){
+  .devcard{padding:16px}
+  .tv-body{border-width:6px}
+}
 
 /* 步骤 */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
@@ -116,7 +144,7 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
   h1{font-size:29px}
   h2{font-size:23px}
   section{padding:52px 0}
-  .cards,.steps,.gallery,.dl{grid-template-columns:1fr}
+  .cards,.steps,.dl{grid-template-columns:1fr}
   .wrap{padding:0 18px}
 }
 </style>
@@ -126,7 +154,7 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top">
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#061021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/><path d="M17 15l3 3-3 3"/></svg></span>
+      <span class="mark"><img src="app-icon.png" alt="FlyShare 应用图标"></span>
       FlyShare <span style="color:var(--muted);font-weight:400">TV 快传</span>
     </a>
     <nav class="navlinks">
@@ -208,18 +236,38 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
       <div class="sec-head">
         <div class="kicker">Screenshots</div>
         <h2>应用长什么样</h2>
-        <p class="sec-desc">以下为 v2.6.14 的电视端实机界面与配套的网页端，点击任意图片可放大查看。</p>
+        <p class="sec-desc">电视端与手机端的实机界面（v2.6.16）。点箭头、圆点或左右滑动切换，点画面可放大查看。</p>
       </div>
-      <div class="gallery">
-        <div class="gitem"><img src="screenshots/01-home.png" alt="首页"><div class="cap">首页 · 文件分类与功能入口</div></div>
-        <div class="gitem"><img src="screenshots/02-quick-transfer.png" alt="快速传输"><div class="cap">快速传输 · 扫码进入网页端</div></div>
-        <div class="gitem"><img src="screenshots/03-lan.png" alt="局域网"><div class="cap">局域网 · 扫描设备与 SMB / FTP</div></div>
-        <div class="gitem"><img src="screenshots/04-app-manager.png" alt="应用管理"><div class="cap">应用管理 · 查看与卸载</div></div>
-        <div class="gitem"><img src="screenshots/05-settings.png" alt="应用设置"><div class="cap">应用设置 · 主题、路径、屏幕方向</div></div>
-        <div class="gitem"><img src="screenshots/07-more.png" alt="更多功能"><div class="cap">更多功能 · 内存、系统设置、电视互联</div></div>
-        <div class="gitem"><img src="screenshots/08-file-manager.png" alt="文件管理器"><div class="cap">文件管理器 · 浏览电视本机目录</div></div>
-        <div class="gitem"><img src="screenshots/09-web-client.png" alt="网页端"><div class="cap">网页端 · 手机 / 电脑扫码后拖拽上传、管理文件</div></div>
+      <div class="devices">
+        <div class="devcard" id="tvCard">
+          <div class="devhead"><b>电视端</b><span>Android TV / 车机 · 横屏</span></div>
+          <div class="tv">
+            <div class="tv-body"><div class="tv-screen"><img id="tvImg" src="screenshots/01-home.png" alt="电视端界面"></div></div>
+            <div class="tv-stand"></div><div class="tv-base"></div>
+          </div>
+          <div class="devctrl">
+            <button type="button" data-dir="-1" aria-label="上一张">‹</button>
+            <div class="dots" id="tvDots"></div>
+            <button type="button" data-dir="1" aria-label="下一张">›</button>
+          </div>
+          <div class="devcap" id="tvCap"></div>
+        </div>
+        <div class="devcard" id="phoneCard">
+          <div class="devhead"><b>手机端</b><span>App 与网页端 · 竖屏</span></div>
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen"><img id="phImg" src="screenshots/phone-01.png" alt="手机端界面"></div>
+            <div class="phone-bar"></div>
+          </div>
+          <div class="devctrl">
+            <button type="button" data-dir="-1" aria-label="上一张">‹</button>
+            <div class="dots" id="phDots"></div>
+            <button type="button" data-dir="1" aria-label="下一张">›</button>
+          </div>
+          <div class="devcap" id="phCap"></div>
+        </div>
       </div>
+      <p class="sec-desc" style="margin:22px auto 0;text-align:center">画面中的 192.168.x.x 是局域网地址，不是公网地址。</p>
     </div>
   </section>
 
@@ -309,12 +357,69 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
 <div id="lb" aria-hidden="true"><img id="lbimg" src="" alt="放大预览"><div class="hint">点击任意处关闭</div></div>
 <script>
 (function(){
-  var lb=document.getElementById('lb'),img=document.getElementById('lbimg');
-  document.querySelectorAll('.gitem img').forEach(function(el){
-    el.addEventListener('click',function(){img.src=el.src;lb.classList.add('on');lb.setAttribute('aria-hidden','false');});
-  });
-  lb.addEventListener('click',function(){lb.classList.remove('on');lb.setAttribute('aria-hidden','true');img.src='';});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('on');lb.setAttribute('aria-hidden','true');img.src='';}});
+  var lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');
+  function openLb(src){lbimg.src=src;lb.classList.add('on');lb.setAttribute('aria-hidden','false');}
+  function closeLb(){lb.classList.remove('on');lb.setAttribute('aria-hidden','true');lbimg.src='';}
+  lb.addEventListener('click',closeLb);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
+
+  var sets={
+    tv:{img:'tvImg',dots:'tvDots',cap:'tvCap',card:'tvCard',list:[
+      {src:'screenshots/01-home.png',cap:'首页 · 文件分类与功能入口'},
+      {src:'screenshots/02-quick-transfer.png',cap:'快速传输 · 扫码进入网页端'},
+      {src:'screenshots/03-lan.png',cap:'局域网 · 扫描设备与 SMB / FTP'},
+      {src:'screenshots/04-app-manager.png',cap:'应用管理 · 查看与卸载'},
+      {src:'screenshots/05-settings.png',cap:'应用设置 · 主题与保存位置'},
+      {src:'screenshots/07-more.png',cap:'更多功能 · 内存、系统设置、电视互联'},
+      {src:'screenshots/08-file-manager.png',cap:'文件管理器 · 浏览电视本机目录'},
+      {src:'screenshots/09-web-client.png',cap:'网页端 · 拖拽上传与管理文件'}
+    ]},
+    ph:{img:'phImg',dots:'phDots',cap:'phCap',card:'phoneCard',list:[
+      {src:'screenshots/phone-01.png',cap:'手机端首页 · 功能入口与文件分类'},
+      {src:'screenshots/phone-02.png',cap:'快速传输 · 扫码即可连上电视'},
+      {src:'screenshots/phone-03.png',cap:'我的应用 · 查看与卸载应用'},
+      {src:'screenshots/phone-04.png',cap:'文件管理器 · 浏览本机目录'},
+      {src:'screenshots/phone-05.png',cap:'TV快传互联 · 局域网设备互传'},
+      {src:'screenshots/phone-06.png',cap:'网页端 · 手机浏览器拖拽上传'}
+    ]}
+  };
+
+  function mount(k){
+    var s=sets[k],i=0;
+    var im=document.getElementById(s.img),dots=document.getElementById(s.dots),
+        cap=document.getElementById(s.cap),card=document.getElementById(s.card);
+    function go(n){
+      i=(n+s.list.length)%s.list.length;
+      im.src=s.list[i].src;im.alt=s.list[i].cap;
+      cap.textContent=(i+1)+' / '+s.list.length+' · '+s.list[i].cap;
+      Array.prototype.forEach.call(dots.children,function(d,j){d.classList.toggle('on',j===i);});
+    }
+    s.list.forEach(function(_,n){
+      var d=document.createElement('i');d.title='第 '+(n+1)+' 张';
+      d.addEventListener('click',function(){go(n);});dots.appendChild(d);
+    });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-dir]'),function(b){
+      b.addEventListener('click',function(){go(i+parseInt(b.getAttribute('data-dir'),10));});
+    });
+    im.addEventListener('click',function(){if(swiped){swiped=false;return;}openLb(im.src);});
+    var x0=null,swiped=false;
+    im.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;swiped=false;},{passive:true});
+    im.addEventListener('touchmove',function(e){
+      if(x0===null)return;
+      if(Math.abs(e.touches[0].clientX-x0)>40){swiped=true;}
+    },{passive:true});
+    im.addEventListener('touchend',function(e){
+      if(x0===null)return;
+      var dx=e.changedTouches[0].clientX-x0;x0=null;
+      if(Math.abs(dx)>40){swiped=true;go(i+(dx<0?1:-1));}
+    },{passive:true});
+    card.addEventListener('keydown',function(e){
+      if(e.key==='ArrowLeft')go(i-1);
+      if(e.key==='ArrowRight')go(i+1);
+    });
+    go(0);
+  }
+  mount('tv');mount('ph');
 })();
 </script>
 </body>
