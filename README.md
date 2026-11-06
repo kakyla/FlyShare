@@ -13,6 +13,38 @@
 
 运行平台：Android TV / 深度定制车机系统（兼容普通 Android 设备）。
 
+## 界面预览
+
+首页：文件分类、快速传输、局域网、应用管理与设置入口。
+
+![首页](docs/screenshots/01-home.png)
+
+快速传输：手机扫二维码即可打开网页端，免登录互传文件。
+
+![快速传输](docs/screenshots/02-quick-transfer.png)
+
+局域网：扫描设备，连接 SMB / FTP 共享。
+
+![局域网](docs/screenshots/03-lan.png)
+
+应用管理：查看、卸载电视上已安装的应用。
+
+![应用管理](docs/screenshots/04-app-manager.png)
+
+应用设置：SMB 工作组、文件保存路径、主题颜色、屏幕方向等。
+
+![应用设置](docs/screenshots/05-settings.png)
+
+更多功能：运行内存、系统设置、开发者模式、电视互联。
+
+![更多功能](docs/screenshots/07-more.png)
+
+文件管理器：浏览电视本机目录，支持复制、移动、删除等操作。
+
+![文件管理器](docs/screenshots/08-file-manager.png)
+
+> 截图取自 v2.6.14 的 Android TV 实机界面；画面中的 192.168.x.x 是局域网地址，不是公网地址。
+
 ## 安全须知
 
 - **服务不鉴权**：为了让手机 / 电脑免登录直接传文件，内建服务是明文 HTTP、不校验身份。**连入同一 WiFi 的任何人都能浏览、下载你设为共享目录里的文件，也能上传和删除。**请只在可信网络（家庭或办公内网）使用，不要在公共 WiFi 下开启，也不要做端口转发 / 内网穿透。
