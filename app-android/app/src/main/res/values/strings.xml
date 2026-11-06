@@ -1,0 +1,567 @@
+<resources>
+    <string name="app_name">TV快传</string>
+    <string name="app_name_en">FlyShare</string>
+    <string name="btn_confirm">确定</string>
+    <string name="btn_cancel">取消</string>
+    <string name="back">返回</string>
+    <string name="btn_save">保存</string>
+    <string name="action_open">打开</string>
+    <string name="action_install">安装</string>
+    <string name="action_enter">进入</string>
+    <string name="action_delete">删除</string>
+    <string name="action_copy">复制</string>
+    <string name="action_move">移动</string>
+    <string name="action_download">下载</string>
+    <string name="action_select_all">全选</string>
+    <string name="action_bookmark">收藏</string>
+    <string name="title_delete_confirm">确认删除</string>
+    <string name="msg_confirm_delete">确定要删除选中的 %1$d 项吗？此操作不可恢复。</string>
+    <string name="msg_confirm_delete_single">确定要删除 \"%1$s\" 吗？此操作不可恢复。</string>
+
+    <string name="checking_for_updates">正在检查更新...</string>
+    <string name="new_version_found">发现新版本：</string>
+    <string name="later">稍后再说</string>
+    <string name="update_now">立即更新</string>
+    <string name="downloading_update">正在下载更新...</string>
+    <string name="update_download_complete">下载完成</string>
+    <string name="update_install_now">立即安装</string>
+    <string name="retry">重试</string>
+
+    <!-- TransferPhoneScreen & TransferScreen -->
+    <string name="transfer_quick_transfer">快速传输</string>
+    <string name="transfer_getting_network">正在获取网络信息...</string>
+    <string name="transfer_network_ethernet">有线网络</string>
+    <string name="transfer_network_cellular">移动网络</string>
+    <string name="transfer_network_none">无网络</string>
+    <string name="transfer_no_network_conn">无网络连接</string>
+    <string name="transfer_generating">生成中...</string>
+    <string name="transfer_scan_qr">手机扫描二维码</string>
+    <string name="transfer_waiting_network">等待网络连接...</string>
+    <string name="transfer_same_lan_hint">请确保手机和电视在同一局域网</string>
+    <string name="transfer_received_list">已接收文件</string>
+    <string name="transfer_clear_list">清空列表</string>
+    <string name="transfer_unselect_all">取消全选</string>
+    <string name="transfer_waiting_receive">等待接收文件...</string>
+    <string name="transfer_back_up">返回上级</string>
+    <string name="transfer_new_files_toast">收到 %1$d 个新文件，点击查看</string>
+    <string name="transfer_address">地址: %1$s</string>
+    <string name="transfer_status_uploading">上传中</string>
+    <string name="transfer_status_saving">保存中...</string>
+    <string name="transfer_speed_suffix">%1$s/s</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings_title">应用设置</string>
+    <string name="settings_about">关于</string>
+    <string name="settings_unknown">未知</string>
+    <string name="settings_version">v%1$s</string>
+    <string name="settings_smb_workgroup">SMB 默认工作组</string>
+    <string name="settings_theme">应用主题颜色</string>
+    <string name="settings_screen_orientation">屏幕方向</string>
+    <string name="settings_screen_orientation_title">选择屏幕方向</string>
+    <string name="orientation_auto">自适应</string>
+    <string name="orientation_landscape">横屏</string>
+    <string name="orientation_portrait">竖屏</string>
+    <string name="settings_notification">传输服务通知</string>
+    <string name="settings_notification_perm_title">无法开启通知</string>
+    <string name="settings_notification_perm_desc">未授予通知权限，无法显示常驻通知。请到系统设置开启本应用通知，再回来打开开关。</string>
+    <string name="settings_notification_perm_go">去系统设置</string>
+    <string name="settings_auto_fix_apk_suffix">自动修正安装包后缀</string>
+    <string name="settings_save_path">文件保存路径</string>
+    <string name="settings_save_path_invalid">路径不可用或无法写入（不能是 Android 系统目录，需所有文件权限）。</string>
+    <string name="settings_save_path_default_display">默认（TVfile）</string>
+    <string name="save_path_pick_title">选择保存文件夹</string>
+    <string name="save_path_pick_confirm">选择此文件夹</string>
+    <string name="save_path_use_default">恢复默认（TVfile）</string>
+    <string name="theme_green">清新绿</string>
+    <string name="theme_purple">梦幻紫</string>
+    <string name="theme_orange">活力橙</string>
+    <string name="theme_blue">经典蓝</string>
+    <string name="settings_smb_workgroup_title">设置 SMB 工作组</string>
+    <string name="settings_smb_workgroup_desc">工作组名称（默认 WORKGROUP）。</string>
+
+    <!-- PermissionGuideScreen -->
+    <string name="permission_welcome">欢迎使用 %1$s</string>
+    <string name="permission_desc">为了实现文件浏览与传输功能\n请在弹出的对话框中选择「允许」读写存储</string>
+    <string name="permission_retry">点击重试</string>
+
+    <!-- MoreScreen -->
+    <string name="more_title">更多功能</string>
+    <string name="more_tv_interconnect">TV快传互联</string>
+    <string name="more_tv_interconnect_desc">局域网电视直连</string>
+    <string name="more_memory_title">运行内存</string>
+    <string name="more_memory_fetching">获取中...</string>
+    <string name="more_memory_info">%1$s/%2$s</string>
+    <string name="more_system_settings">系统设置</string>
+    <string name="more_system_settings_failed">您的电视系统不支持直接跳转设置，请手动前往</string>
+    <string name="more_developer_options">开发者模式</string>
+    <string name="more_developer_options_failed">找不到开发者选项，请先在“关于本机”中连按版本号激活</string>
+
+    <!-- About & Privacy -->
+    <string name="about_title">关于</string>
+    <string name="about_version_unknown">未知</string>
+    <string name="about_official_website">官方网站</string>
+    <string name="about_no_website">暂无官网，可通过应用商店关注更新</string>
+    <string name="about_agreement">用户协议</string>
+    <string name="about_privacy">隐私政策</string>
+    <string name="about_app_desc">一款简单、快速的局域网电视文件传输与管理工具。</string>
+    <string name="about_contact_author">联系作者</string>
+    <string name="about_contact_email">yygo1@qq.com</string>
+    <string name="about_qq_group">QQ群</string>
+    <string name="about_qq_group_number">850424485</string>
+    <string name="about_privacy_title">隐私政策</string>
+    <string name="about_privacy_content">TV快传非常重视您的隐私。本政策说明我们如何收集、使用和保护您的信息。\n\n1. 信息收集\n本软件作为纯本地局域网工具，除必要的设备型号用于标识连接外，不会主动收集您的个人隐私数据，也不会将您的文件或隐私数据上传至任何外部云端服务器。\n\n2. 权限说明\n为了提供核心的文件管理和传输功能，我们需要申请您的“存储权限”或“所有文件管理权限”。这些权限仅用于在本地读取和写入文件，绝不做其他用途。\n\n3. 信息安全\n我们在您的设备本地安全地保存您的偏好设置（如主题、收藏夹、SMB 连接信息等）。请您妥善保管设备，以防数据泄露。\n\n4. 联系我们\n如果您对本隐私政策有任何疑问，请关注后续更新渠道获取联系方式。</string>
+    <string name="about_agreement_title">用户协议</string>
+    <string name="about_agreement_content">欢迎使用 TV快传 (FlyShare)。本协议是您与我们之间关于使用本软件服务所订立的协议。\n\n1. 服务内容\n本软件主要为您提供局域网内的文件传输、管理及相关附加功能。\n\n2. 用户规范\n您承诺在使用本软件时遵守国家法律法规，不得利用本软件从事任何违法违规行为。禁止利用本软件传输涉及暴力、色情、侵权等非法文件。\n\n3. 免责声明\n对于因不可抗力、网络状况、通讯线路故障等造成服务中断，我们不承担责任。用户需对通过本软件传输的数据自行负责。\n\n4. 协议修改\n我们保留随时修改本协议的权利，修改后的协议将通过适当的方式进行通知，如您继续使用本软件，即视为同意修改后的协议。</string>
+
+    <!-- DirPickerScreen -->
+    <string name="dir_picker_copy_to">复制到</string>
+    <string name="dir_picker_move_to">移动到</string>
+    <string name="dir_picker_download_to">下载到</string>
+    <string name="dir_picker_cannot_access">无法访问</string>
+    <string name="dir_picker_items">%1$d 项</string>
+    <string name="dir_picker_create_folder">新建文件夹</string>
+    <string name="dir_picker_create">新建</string>
+    <string name="dir_picker_empty_dir">此目录为空</string>
+    <string name="dir_picker_copied">已复制 %1$d 项</string>
+    <string name="dir_picker_moved">已移动 %1$d 项</string>
+    <string name="dir_picker_copy">复制</string>
+    <string name="dir_picker_move">移动</string>
+    <string name="dir_picker_success_fail">%1$s %2$d 项成功，%3$d 项失败\n%4$s</string>
+    <string name="dir_picker_fail">%1$s失败：%2$s</string>
+    <string name="dir_picker_unknown_error">未知错误</string>
+    <string name="dir_picker_input_folder_name">请输入文件夹名称</string>
+    <string name="dir_picker_created_folder">已创建文件夹: %1$s</string>
+    <string name="dir_picker_create_fail">创建失败</string>
+    <string name="dir_picker_target_path">目标路径</string>
+    <string name="dir_picker_hint">点击文件夹进入目录\n点击按钮确认目标</string>
+    <string name="dir_picker_conflict_title">目标目录存在同名文件</string>
+    <string name="dir_picker_conflict_msg">有 %1$d 个文件与已存在文件重名，请选择处理方式：</string>
+    <string name="dir_picker_overwrite">覆盖</string>
+    <string name="dir_picker_skip">跳过</string>
+    <string name="dir_picker_rename">重命名</string>
+    <string name="dir_picker_skipped">已跳过 %1$d 个重名项</string>
+    <string name="dir_picker_copy_here">复制到此处</string>
+    <string name="dir_picker_move_here">移动到此处</string>
+    <string name="dir_picker_download_here">下载到此处</string>
+    <string name="dir_picker_up_level">.. 返回上级</string>
+
+    <!-- AppUninstallScreen -->
+    <string name="app_uninstall_scanning">正在扫描已安装应用...</string>
+    <string name="app_uninstall_no_apps">未找到可卸载的应用</string>
+    <string name="app_uninstall_no_system_apps">未发现可操作的系统应用，请点击右上角显示全部组件</string>
+    <string name="app_uninstall_not_supported">此设备不支持应用卸载，请到系统设置中操作</string>
+    <string name="app_uninstall_btn">卸载</string>
+    <string name="app_uninstall_user_installed">用户安装</string>
+    <string name="app_uninstall_btn_launch">启动</string>
+    <string name="app_uninstall_btn_app_info">应用信息</string>
+    <string name="app_uninstall_no_details_entry">无法打开应用设置</string>
+    <string name="app_uninstall_btn_extract">提取</string>
+    <string name="app_uninstall_btn_close">关闭</string>
+    <string name="app_uninstall_no_launch_intent">该应用没有启动入口</string>
+    <string name="app_uninstall_extracting">正在提取 %1$s...</string>
+    <string name="app_uninstall_extract_success">提取成功</string>
+    <string name="app_uninstall_extract_fail">提取失败，可能是系统权限限制</string>
+    <string name="app_uninstall_view_system_apps">查看系统应用</string>
+    <string name="app_uninstall_hide_system_components">隐藏无界面组件</string>
+    <string name="app_uninstall_show_all_components">显示全部组件</string>
+    <string name="app_uninstall_my_apps">我的应用</string>
+    <string name="app_uninstall_system_apps">系统应用</string>
+    <string name="app_uninstall_error_source_not_found">源文件不存在</string>
+    <string name="app_uninstall_error_create_dir">无法创建目标目录，请检查存储权限</string>
+
+    <!-- HomeScreen -->
+    <string name="home_quick_transfer">快速传输</string>
+    <string name="home_lan">局域网</string>
+    <string name="home_app_uninstall">应用管理</string>
+    <string name="home_app_settings">应用设置</string>
+    <string name="home_check_update">检测更新</string>
+    <string name="home_apk">安装包</string>
+    <string name="home_video">视频</string>
+    <string name="home_photo">图片</string>
+    <string name="home_music">音乐</string>
+    <string name="home_no_storage">未检测到存储设备</string>
+    <string name="home_all_files">全部文件</string>
+    <string name="home_more">更多</string>
+    <string name="home_exit_hint">再次按返回键退出应用</string>
+    <string name="home_scanning">扫描中...</string>
+    <string name="home_apk_count">%1$d 个安装包</string>
+    <string name="home_video_count">%1$d 个视频</string>
+    <string name="home_photo_count">%1$d 张图片</string>
+    <string name="home_music_count">%1$d 首音乐</string>
+    
+    <!-- SmbBrowseScreen -->
+    <string name="smb_connect_failed">连接失败</string>
+    <string name="smb_load_failed">加载失败</string>
+    <string name="smb_toggle_view">视图切换</string>
+    <string name="smb_more_actions">更多操作</string>
+    <string name="smb_multi_select_actions">多选操作</string>
+    <string name="smb_unbookmark">取消收藏</string>
+    <string name="smb_file_details">文件详情</string>
+    <string name="smb_file_name">文件名: %1$s</string>
+    <string name="smb_file_size">大小: %1$s</string>
+    <string name="smb_file_modified">修改时间: %1$s</string>
+    <string name="smb_file_path">路径: %1$s</string>
+    <string name="smb_items_selected">%1$d 项已选</string>
+    <string name="smb_selected_count">已选 %1$d/%2$d 项</string>
+    
+    <!-- NetworkScreen -->
+    <string name="network_unknown_ip">未知</string>
+    <string name="network_title">局域网</string>
+    <string name="network_saved_connections">已保存连接</string>
+    <string name="network_no_saved">暂无保存的连接\n点击右侧「连接 SMB」添加</string>
+    <string name="network_scanning">扫描中...</string>
+    <string name="network_scanning_lan">正在扫描局域网...</string>
+    <string name="network_remove_selected">移除选中 (%1$d)</string>
+    <string name="network_delete_selected">删除选中 (%1$d)</string>
+    <string name="network_scan_device">扫描设备</string>
+    <string name="network_connect_smb">连接 SMB</string>
+    <string name="network_connect_ftp">连接 FTP</string>
+    
+    <!-- SMB Connect -->
+    <string name="smb_connect_title">连接 SMB 共享</string>
+    <string name="smb_connecting">连接中...</string>
+    <string name="smb_connect">连接</string>
+    <string name="smb_input_error">请输入有效的 IP/计算机名和共享目录</string>
+    <string name="smb_host_label">IP 地址或计算机名</string>
+    <string name="smb_host_placeholder">如 192.168.1.100</string>
+    <string name="smb_share_label">共享目录</string>
+    <string name="smb_share_placeholder">共享文件夹名称</string>
+    <string name="smb_user_label">用户名</string>
+    <string name="smb_user_placeholder">匿名访问留空</string>
+    <string name="smb_pass_label">密码</string>
+
+    <!-- FTP Connect / Browse -->
+    <string name="ftp_connect_title">连接 FTP 服务器</string>
+    <string name="ftp_connecting">连接中...</string>
+    <string name="ftp_connect">连接</string>
+    <string name="ftp_input_error">请输入有效的 IP 地址和可访问的端口</string>
+    <string name="ftp_host_label">IP 地址或主机名</string>
+    <string name="ftp_host_placeholder">如 192.168.1.100</string>
+    <string name="ftp_port_label">端口</string>
+    <string name="ftp_port_placeholder">默认 21</string>
+    <string name="ftp_user_label">用户名</string>
+    <string name="ftp_user_placeholder">匿名访问留空</string>
+    <string name="ftp_pass_label">密码</string>
+    <string name="ftp_anonymous">匿名登录（不填账号密码）</string>
+    <string name="ftp_title_browse">FTP 浏览</string>
+    <string name="ftp_status_connecting">正在连接 FTP...</string>
+    <string name="ftp_status_loading">正在加载...</string>
+    <string name="ftp_status_connect_failed">连接失败</string>
+    <string name="ftp_status_downloading">正在下载 %1$s</string>
+    <string name="ftp_btn_retry">重试</string>
+    <string name="ftp_empty_dir_title">目录为空</string>
+    <string name="ftp_empty_dir_subtitle">该文件夹没有文件</string>
+    <string name="ftp_load_failed">加载失败</string>
+    <string name="ftp_connect_failed_fallback">FTP 连接失败，请检查服务器配置</string>
+
+    <!-- File Manager -->
+    <string name="file_manager_sort">排序</string>
+    <string name="file_manager_new_folder">新建文件夹</string>
+
+    <!-- FileManagerScreen specific strings -->
+    <string name="file_manager_action_select_all">全选</string>
+    <string name="file_manager_action_cancel">取消</string>
+    <string name="file_manager_action_copy">复制</string>
+    <string name="file_manager_action_move">移动</string>
+    <string name="file_manager_action_delete">删除</string>
+    <string name="file_manager_action_bookmark">收藏</string>
+    <string name="file_manager_action_open">打开</string>
+    <string name="file_manager_action_install">安装</string>
+    <string name="file_manager_action_rename">重命名</string>
+    <string name="file_manager_action_details">详情</string>
+    <string name="smb_msg_unbookmark_multi_confirm">确定要取消收藏选中的 %1$d 个文件夹吗？</string>
+    <string name="smb_msg_unbookmark_confirm">确定要取消收藏此文件夹吗？</string>
+    <string name="file_manager_btn_confirm">确定</string>
+    <string name="file_manager_opening">正在打开...</string>
+    <string name="file_manager_open_failed">无法打开此文件</string>
+    <string name="file_manager_show_hidden">显示隐藏文件</string>
+    <string name="file_manager_bookmark_view">收藏的文件夹</string>
+    <string name="file_manager_empty_bookmarks">暂无收藏的文件夹</string>
+    <string name="file_manager_unbookmarked_multi">已批量取消收藏</string>
+    <string name="file_manager_unbookmarked">已取消收藏</string>
+    <string name="file_manager_sort_name_asc">名称</string>
+    <string name="file_manager_sort_size_desc">从大到小</string>
+    <string name="file_manager_sort_size_asc">从小到大</string>
+    <string name="file_manager_sort_type">类型</string>
+    <string name="file_manager_sort_date_desc">修改时间</string>
+
+    <string name="file_manager_installing">正在安装...</string>
+    <string name="file_manager_install_failed">安装失败，请检查 APK 文件</string>
+    <string name="file_manager_bookmarked_single">已收藏: %1$s</string>
+    <string name="file_manager_items_selected">%1$d 项已选</string>
+    <string name="file_manager_items_selected_total">%1$d 项已选 / %2$d 总项</string>
+    <string name="file_manager_bookmarked_multi">已批量收藏 %1$d 个文件夹</string>
+    <string name="file_manager_multi_delete_title">批量删除文件</string>
+    <string name="file_manager_multi_delete_msg">确定要删除 %1$d 个文件/文件夹吗？此操作不可撤销。</string>
+    <string name="danger_delete_android_title">即将删除系统数据目录</string>
+    <string name="danger_delete_android_msg">你正在删除存储根目录下的「Android」数据目录。此操作会清除本存储卷上所有应用的外部数据，包括游戏存档、离线下载、应用缓存等。&#10;&#10;应用本身不会被卸载，但上述文件会丢失且无法恢复。&#10;&#10;确定要继续吗？</string>
+    <string name="danger_delete_storage_root_title">即将删除存储根目录全部内容</string>
+    <string name="danger_delete_storage_root_msg">你正在删除存储根目录下的全部内容（照片、视频、下载、应用数据等）。此操作会清除该存储卷上的所有用户文件，且无法恢复。&#10;&#10;确定要继续吗？</string>
+    <string name="app_external_delete_hint">注意：将清除「%1$s」应用的外部数据（缓存、离线内容等），应用不会卸载，但文件无法恢复。</string>
+    <string name="file_manager_auth_msg">在 Android 11 及以上版本，进行文件复制、移动或删除到外部存储目录需要“所有文件管理权限”。请前往系统设置授予此权限。</string>
+    <string name="file_manager_btn_auth">前往授权</string>
+    <string name="file_manager_auth_failed">无法打开权限设置页，请手动前往设置</string>
+    <string name="file_manager_rename_title">重命名</string>
+    <string name="file_manager_rename_hint">请输入新名称</string>
+    <string name="file_manager_new_folder_default">新建文件夹</string>
+    <string name="file_manager_new_folder_title">新建文件夹</string>
+    <string name="file_manager_new_folder_hint">请输入文件夹名称</string>
+    <string name="file_manager_return_up">.. 返回上级</string>
+    <string name="file_manager_items_count">%1$d 项</string>
+    <string name="file_manager_size_date">%1$s  •  %2$s</string>
+    <string name="file_manager_msg_renamed">已重命名为: %1$s</string>
+    <string name="file_manager_msg_folder_created">已创建文件夹: %1$s</string>
+    <string name="file_manager_msg_deleted">已删除 %1$s</string>
+    <string name="file_manager_msg_deleted_multi">已删除 %1$d 个文件</string>
+    <string name="file_manager_title_apk">安装包</string>
+    <string name="file_manager_title_video">视频</string>
+    <string name="file_manager_title_image">图片</string>
+    <string name="file_manager_title_music">音乐</string>
+
+    <!-- SmbBrowseScreen specific strings -->
+    <string name="smb_action_open">打开</string>
+    <string name="smb_action_install">安装</string>
+    <string name="smb_action_delete">删除</string>
+    <string name="smb_action_rename">重命名</string>
+    <string name="smb_action_copy">复制</string>
+    <string name="smb_action_move">移动</string>
+    <string name="smb_action_download">下载到本机</string>
+    <string name="smb_action_details">详情</string>
+    <string name="smb_action_bookmark">收藏</string>
+    <string name="smb_msg_download_no_app">下载成功，但本机没有应用能打开此文件</string>
+    <string name="smb_msg_opened">已打开</string>
+    <string name="smb_msg_download_cannot_open">下载成功但无法打开</string>
+    <string name="smb_title_bookmarks">收藏的文件夹</string>
+    <string name="smb_title_browse">SMB 浏览</string>
+    <string name="smb_status_connecting">正在连接...</string>
+    <string name="smb_status_loading">正在加载...</string>
+    <string name="smb_status_connect_failed">连接失败</string>
+    <string name="smb_btn_retry">重试</string>
+    <string name="smb_status_downloading">正在下载: %1$s</string>
+    <string name="smb_bookmark_desc">收藏的文件夹</string>
+    <string name="smb_view_toggle_desc">视图切换</string>
+    <string name="smb_more_actions_desc">更多操作</string>
+    <string name="smb_sort">排序</string>
+    <string name="smb_show_hidden">显示隐藏文件</string>
+    <string name="smb_no_bookmarks_title">暂无收藏</string>
+    <string name="smb_no_bookmarks_subtitle">你还没有收藏任何文件夹</string>
+    <string name="smb_multi_select_title">多选操作</string>
+    <string name="smb_action_select_all">全选</string>
+    <string name="smb_action_unbookmark">取消收藏</string>
+    <string name="smb_action_cancel">取消</string>
+    <string name="smb_status_load_failed">加载失败</string>
+    <string name="smb_empty_dir_title">此目录为空</string>
+    <string name="smb_empty_dir_subtitle">没有找到任何文件或文件夹</string>
+    <string name="smb_msg_bookmarked_single">已收藏: %1$s</string>
+    <string name="smb_msg_bookmarked_multi">已批量收藏 %1$d 个文件夹</string>
+    <string name="smb_new_folder_title">新建文件夹</string>
+    <string name="smb_btn_confirm">确定</string>
+    <string name="smb_btn_cancel">取消</string>
+    <string name="smb_details_title">文件详情</string>
+    <string name="smb_details_name">文件名: %1$s</string>
+    <string name="smb_details_size">大小: %1$s</string>
+    <string name="smb_details_type_dir">文件夹</string>
+    <string name="smb_details_modified">修改时间: %1$s</string>
+    <string name="smb_details_path">路径: smb://%1$s/%2$s%3$s</string>
+    <string name="smb_btn_close">关闭</string>
+    <string name="smb_unbookmark_title">取消收藏</string>
+    <string name="smb_unbookmark_multi_msg">确定要取消收藏选中的 %1$d 个文件夹吗？</string>
+    <string name="smb_unbookmark_single_msg">确定要取消收藏此文件夹吗？</string>
+    <string name="smb_msg_unbookmarked_multi">已批量取消收藏</string>
+    <string name="smb_msg_unbookmarked_single">已取消收藏</string>
+    <string name="smb_delete_multi_title">确认删除 %1$d 项？</string>
+    <string name="smb_delete_single_title">确认删除？</string>
+    <string name="smb_delete_msg">“%1$s” 将被彻底删除，此操作不可撤销</string>
+
+    <!-- NetworkScreen specific strings -->
+    <string name="network_scan_no_devices">扫描完成，未发现 SMB 共享设备</string>
+    <string name="network_scan_no_network">未连接网络，请检查 WiFi/以太网</string>
+    <string name="network_scan_hint">点击右侧扫描</string>
+    <string name="network_exit_multi">退出多选</string>
+    <string name="network_scanning_count">扫描中...(%1$d)</string>
+
+    <!-- Transfer Foreground Service -->
+    <string name="transfer_service_title">文件传输服务</string>
+    <string name="transfer_service_desc">保持文件传输服务运行</string>
+    <string name="transfer_service_running">传输服务运行中，可接收文件</string>
+
+    <!-- File & SMB Operations Errors -->
+    <string name="error_file_not_found">文件不存在</string>
+    <string name="error_no_write_permission">无写入权限，请授予存储管理权限</string>
+    <string name="error_no_delete_permission">无删除权限（上级目录不可写）</string>
+    <string name="error_delete_failed_occupied">删除失败，文件可能被占用</string>
+    <string name="error_name_empty">名称不能为空</string>
+    <string name="error_invalid_chars">包含非法字符</string>
+    <string name="error_parent_dir_unknown">无法确定上级目录</string>
+    <string name="error_target_exists">目标已存在: %1$s</string>
+    <string name="error_target_name_exists">目标名称已存在</string>
+    <string name="error_rename_occupied">重命名失败，文件可能被占用</string>
+    <string name="error_rename_failed">重命名失败: %1$s</string>
+    <string name="error_source_not_found">源文件不存在: %1$s</string>
+    <string name="error_cannot_create_dir">无法创建目标目录: %1$s</string>
+    <string name="error_target_dir_not_writable">目标目录不可写: %1$s</string>
+    <string name="error_copy_failed">复制失败: %1$s</string>
+    <string name="error_move_failed_delete_source">移动失败：无法删除源文件</string>
+    <string name="error_move_failed_copy">移动失败：复制到目标失败</string>
+    <string name="error_move_failed">移动失败: %1$s</string>
+    <string name="error_folder_name_empty">文件夹名称不能为空</string>
+    <string name="error_parent_dir_not_found">父目录不存在</string>
+    <string name="error_no_write_permission_short">无写入权限</string>
+    <string name="error_folder_exists">文件夹已存在</string>
+    <string name="error_create_failed">创建失败</string>
+    <string name="error_create_folder_failed">创建文件夹失败: %1$s</string>
+    <string name="error_smb_not_connected">SMB 未连接</string>
+    <string name="error_invalid_chars_smb">名称不能包含 \\ / : * ? \" &lt; &gt; | 等非法字符</string>
+    <string name="error_invalid_filename">非法文件名: %1$s</string>
+    <string name="error_source_dest_same">目标目录与源文件所在目录相同，无需操作</string>
+    <string name="error_dest_inside_source">不能把文件夹复制或移动到其自身内部</string>
+    <string name="http_api_error_root_forbidden">不能对共享根目录本身执行该操作</string>
+    <string name="remote_browse_delete_failed">删除失败: %1$s</string>
+    <string name="remote_browse_send_cancel">取消发送</string>
+    <string name="remote_browse_send_cancelled">已取消发送</string>
+    <string name="update_waiting_for_network">正在等待网络连接…</string>
+    <string name="update_download_interrupted">下载记录已丢失，请重新下载</string>
+    <string name="update_checksum_mismatch">安装包校验失败，已取消安装</string>
+
+    <!-- Global Error Messages -->
+    <string name="error_network_generic">网络连接异常，请检查您的网络设置</string>
+    <string name="error_network_timeout">网络连接超时</string>
+    <string name="error_storage_generic">存储访问失败，请检查存储权限</string>
+    <string name="error_smb_generic">SMB 操作失败，请检查连接或权限</string>
+    <string name="error_operation_cancelled">操作已被取消</string>
+    <string name="error_unknown_generic">发生未知错误，请稍后重试</string>
+    <string name="error_io_generic">文件读写错误</string>
+    <string name="error_permission_denied">权限不足，请授予相应权限</string>
+    <string name="error_smb_resolve_hostname">无法解析计算机名 \'%1$s\'，请检查名称或改用 IP 地址</string>
+    <string name="error_smb_cannot_open_share">无法打开共享 \'%1$s\'，请检查共享名或权限</string>
+    <string name="error_smb_logon_failure">用户名或密码错误</string>
+    <string name="error_smb_access_denied">拒绝访问：请检查用户是否有权限访问该共享</string>
+    <string name="error_smb_bad_network_name">找不到共享名：请检查共享名是否正确</string>
+    <string name="error_smb_account_disabled">账号被禁用</string>
+    <string name="error_smb_generic_status">SMB 错误: %1$s</string>
+    <string name="error_smb_cannot_connect">无法连接到服务器：请检查 IP 或网络</string>
+    <string name="error_smb_connection_refused">连接被拒绝：服务器未开启 SMB 服务或被防火墙拦截</string>
+    <string name="error_smb_no_route">找不到路由：请检查网络连接</string>
+
+    <!-- FTP 错误 -->
+    <string name="error_ftp_connect_failed">无法连接到 FTP 服务器 %1$s，请检查 IP/端口或网络</string>
+    <string name="error_ftp_login_failed">FTP 登录失败：用户名或密码错误</string>
+    <string name="error_ftp_not_connected">FTP 未连接或连接已断开</string>
+    <string name="error_permission_denied_storage">权限被拒绝(EPERM)：请在系统设置中授予应用“所有文件管理”权限。</string>
+
+    <!-- Remote Browse Screen -->
+    <string name="remote_browse_title_suffix"> - TVfile</string>
+    <string name="remote_browse_action_select">选择</string>
+    <string name="remote_browse_download_success">已下载至本机: %1$s</string>
+    <string name="remote_browse_download_failed">下载失败: %1$s</string>
+    <string name="remote_browse_downloading_to_local">正在下载到本机...</string>
+    <string name="remote_browse_empty_dir">目录为空</string>
+    <string name="remote_browse_unknown_error">未知错误</string>
+    <string name="remote_browse_download_result">成功下载 %1$d 个文件，失败 %2$d 个</string>
+    <string name="remote_browse_download_done_title">下载完成</string>
+    <string name="remote_browse_download_done_more">还有 %1$d 个文件…</string>
+    <string name="remote_browse_download_saved_to">已保存到：%1$s</string>
+    <string name="remote_browse_error_http">加载失败: HTTP %1$d</string>
+    <string name="remote_browse_error_conn">连接异常: %1$s</string>
+    <string name="remote_browse_error_conn_refused">无法连接对方设备：对方互传服务未启动或端口不正确</string>
+    <string name="remote_browse_error_conn_unreachable">无法连接对方设备：请确认两台设备处于同一 Wi-Fi / 网段（跨网段或访客网络可能受限）</string>
+    <string name="remote_browse_retry">重试</string>
+    <string name="remote_browse_downloading_hint">下载中，请稍候…</string>
+    <string name="remote_browse_downloading_files">正在下载 %1$d 个文件…</string>
+    <string name="remote_browse_action_delete">删除</string>
+    <string name="remote_browse_action_delete_count">删除(%1$d)</string>
+    <string name="remote_browse_action_rename">重命名</string>
+    <string name="remote_browse_delete_confirm_title">删除确认</string>
+    <string name="remote_browse_delete_confirm_text">确定删除对方设备上的「%1$s」吗？此操作不可恢复。</string>
+    <string name="remote_browse_delete_confirm_text_batch">确定删除对方设备上选中的 %1$d 个文件/文件夹吗？此操作不可恢复。</string>
+    <string name="remote_browse_delete_result">成功删除 %1$d 个，失败 %2$d 个</string>
+    <string name="remote_browse_delete_success">已删除: %1$s</string>
+    <string name="remote_browse_rename_title">重命名</string>
+    <string name="remote_browse_rename_success">已重命名为 %1$s</string>
+    <string name="remote_browse_btn_send">发送</string>
+    <string name="remote_browse_send_title">发送本机文件到对方</string>
+    <string name="remote_browse_send_target_dir">对方接收目录: %1$s</string>
+    <string name="remote_browse_send_btn_count">发送(%1$d)</string>
+    <string name="remote_browse_send_up">返回上级</string>
+    <string name="remote_browse_send_sending">正在发送 %1$d/%2$d…</string>
+    <string name="remote_browse_send_result">成功发送 %1$d 个文件，失败 %2$d 个</string>
+
+    <!-- HttpServer API Errors -->
+    <string name="http_api_error_forbidden">拒绝访问</string>
+    <string name="http_api_error_dir_not_found">目录未找到</string>
+    <string name="http_api_error_file_not_found">文件未找到</string>
+    <string name="http_api_error_path_required">需要路径参数</string>
+    <string name="http_api_error_no_file_received">未接收到文件</string>
+    <string name="http_api_error_upload_failed">上传失败: %1$s</string>
+    <string name="http_api_error_internal">内部错误: %1$s</string>
+    <string name="http_api_error_invalid_name">文件夹名称无效</string>
+    <string name="http_api_error_mkdir_failed">创建文件夹失败</string>
+    <string name="http_api_error_target_exists">同名文件或文件夹已存在</string>
+    <string name="http_api_error_rename_failed">重命名失败</string>
+    <string name="http_api_error_delete_failed">删除失败</string>
+
+    <!-- Update Error Messages -->
+    <string name="update_already_latest">当前已是最新版本</string>
+    <string name="update_get_version_failed">获取应用版本失败</string>
+    <string name="update_get_info_failed_empty">获取更新信息失败: 数据为空</string>
+    <string name="update_unknown_error">未知错误</string>
+    <string name="update_download_failed">下载失败</string>
+    <string name="update_parse_apk_failed">解析安装包失败</string>
+    <string name="update_title_suffix"> 更新</string>
+    <string name="update_downloading_desc">正在下载新版本...</string>
+
+    <!-- InterconnectScreen -->
+    <string name="interconnect_searching">正在局域网中搜索其他 TV 快传设备...</string>
+    <string name="interconnect_searching_hint">使用说明：请确认两部设备连接在同一个 Wi-Fi 或局域网；在另一端打开 TV 快传并保持运行。设备会自动出现在下方列表中，选中后即可互传文件。</string>
+    <string name="interconnect_btn_download">下载</string>
+    <string name="interconnect_btn_download_count">下载(%1$d)</string>
+    <string name="interconnect_manual_add">手动添加</string>
+    <string name="interconnect_manual_add_title">添加互联设备</string>
+    <string name="interconnect_manual_add_hint">输入对方电视的 IP 地址即可（两台都安装本应用，无需端口）。适用于两台处于不同网段、自动搜索不到的场景。</string>
+    <string name="interconnect_manual_add_placeholder">例如 192.168.106.55</string>
+    <string name="interconnect_manual_add_invalid">请输入有效的 IP 地址</string>
+    <string name="interconnect_manual_added">已添加设备 %1$s</string>
+
+    <string name="network_device_lan">局域网设备</string>
+    
+    <string name="smb_type_dir_label">目录</string>
+    <string name="smb_return_up_level">.. 返回上级</string>
+    <string name="smb_rename_title">重命名</string>
+    <string name="smb_rename_hint">请输入新名称</string>
+    <string name="smb_rename_confirm">确定</string>
+    <string name="smb_rename_cancel">取消</string>
+    <string name="smb_dir_picker_empty">此目录为空</string>
+    <string name="smb_dir_picker_target">目标路径</string>
+    <string name="smb_dir_picker_confirm">确认目标</string>
+
+    <!-- SMB Browse ViewModel Errors -->
+    <string name="smb_error_share_name_empty">请填写共享名称</string>
+    <string name="smb_error_rename_failed_default">重命名失败</string>
+    <string name="smb_error_download_failed">下载失败</string>
+    <string name="error_no_downloadable_files">所选目录中无可下载的文件</string>
+    <string name="transfer_msg_delete_failed">删除失败，请重试</string>
+    <string name="smb_msg_apk_downloaded">安装包已下载，请确认安装</string>
+
+    <string name="smb_error_read_dir">读取目录出错: %1$s</string>
+    <string name="smb_msg_folder_created">已创建文件夹: %1$s</string>
+    <string name="smb_msg_folder_name_empty">文件夹名称不能为空</string>
+    <string name="smb_msg_deleted_success">已删除 %1$d 项</string>
+    <string name="smb_msg_deleted_partial">已删除 %1$d 项，%2$d 项失败</string>
+    <string name="smb_msg_copy_success">复制完成（%1$d 个）</string>
+    <string name="smb_msg_move_success">移动完成（%1$d 个）</string>
+    <string name="smb_msg_transfer_partial">完成 %1$d 个，失败: %2$s</string>
+    <string name="smb_msg_download_success">下载完成（%1$d 个），已保存至本机 Download 文件夹</string>
+    <string name="smb_msg_download_partial">完成 %1$d 个，%2$d 项失败</string>
+
+    <!-- 内置预览（2026-10-30 第一期：文本 + 图片） -->
+    <string name="preview_unsupported_title">这个格式暂时不支持预览</string>
+    <string name="preview_unsupported_desc">返回上一页，可以交给电视里的其他应用打开</string>
+    <string name="preview_hint_image">◀ ▶ 切换图片　　OK 隐藏信息　　返回 退出</string>
+    <string name="preview_hint_text">↑ ↓ 滚动　　← → 快速滚动　　返回 退出</string>
+    <string name="preview_image_counter">%1$d / %2$d</string>
+    <string name="preview_text_meta">%1$d 行　%2$s　%3$s</string>
+    <string name="preview_truncated">文件较大，只显示开头部分</string>
+    <string name="preview_error">打不开：%1$s</string>
+    <string name="preview_open_failed">读不出这个文件</string>
+    <string name="settings_built_in_preview">内建预览</string>
+</resources>

@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="light">
+<title>${APP_NAME}</title>
+<style>
+/* ===== Reset & Base ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #2384ED;
+  --primaryLight: rgba(35, 132, 237, 0.10);
+  --pageBg: #F2F7FD;
+  --cardBg: #ffffff;
+  --emptyBg: #F8FBFF;
+  --success: #36C886;
+  --danger: #FF5959;
+  --textMain: #0F172A;
+  --textAux: #94A3B8;
+  --border: rgba(226, 232, 240, 0.5);
+  --shadowCard: 0 6px 22px rgba(35, 132, 237, 0.09);
+  --shadowEmpty: 0 5px 14px rgba(15, 23, 42, 0.08);
+  --shadowIcon: 0 6px 18px rgba(35, 132, 237, 0.10);
+  --radiusLg: 28px;
+  --radiusMd: 14px;
+  --radiusSm: 10px;
+  --radiusXs: 6px;
+}
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--textMain);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 轻科技背景：光斑 + 浅网格 ===== */
+.bg-tech-soft {
+  background-image:
+    radial-gradient(circle at 12% 12%, rgba(35, 132, 237, 0.08), transparent 28%),
+    radial-gradient(circle at 88% 8%, rgba(54, 200, 134, 0.06), transparent 24%),
+    radial-gradient(circle at 50% 96%, rgba(35, 132, 237, 0.06), transparent 32%),
+    linear-gradient(180deg, #F2F7FD, #FFFFFF 48%);
+  background-attachment: fixed;
+}
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(35, 132, 237, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(35, 132, 237, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ===== Header ===== */
+.header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-logo {
+  width: 26px; height: 26px; border-radius: var(--radiusSm);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: none;
+}
+.header-logo svg { width: 26px; height: 26px; }
+.header-title { font-size: 18px; font-weight: 600; }
+.header-addr {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--primary);
+  background: var(--primaryLight);
+  padding: 4px 12px; border-radius: 20px;
+}
+.header-addr svg { width: 11px; height: 11px; }
+
+/* ===== Main ===== */
+.main { padding: 22px 16px; max-width: 800px; margin: 0 auto; }
+.main > * + * { margin-top: 24px; }
+
+/* ===== Upload Area：蓝绿渐变层次 ===== */
+.upload-area {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(35,132,237,0.14), transparent 50%),
+    linear-gradient(180deg, #FAFDFF, #F6F9FF);
+  border: 2px dashed rgba(35,132,237,0.35);
+  border-radius: var(--radiusLg);
+  box-shadow: var(--shadowCard);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.upload-area:hover { border-color: rgba(35,132,237,0.6); }
+.upload-area.dragover { border-color: var(--primary); background: rgba(35,132,237,0.05); }
+.upload-area input[type=file] { display: none; }
+
+.upload-icon-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.upload-icon {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: var(--cardBg);
+  box-shadow: var(--shadowIcon);
+  display: flex; align-items: center; justify-content: center;
+}
+.upload-icon svg { width: 30px; height: 30px; color: var(--primary); }
+.upload-badge {
+  position: absolute; bottom: -4px; right: -4px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.upload-badge svg { width: 14px; height: 14px; color: #fff; }
+
+.upload-title { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+.upload-hint { font-size: 14px; color: var(--textAux); max-width: 320px; margin: 0 auto; line-height: 1.6; }
+
+.upload-tags { display: flex; justify-content: center; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.upload-tag {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.7);
+  padding: 6px 12px; border-radius: 20px;
+}
+.upload-tag.primary { color: var(--primary); }
+.upload-tag.success { color: var(--success); }
+.upload-tag svg { width: 14px; height: 14px; }
+
+/* 上传区操作按钮（单文件 / 整个文件夹） */
+/* ===== File Section：点阵纹理 ===== */
+.file-section {
+  background: var(--cardBg);
+  border-radius: var(--radiusLg);
+  box-shadow: var(--shadowEmpty);
+  padding: 20px;
+  background-image: radial-gradient(rgba(35, 132, 237, 0.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.file-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.file-header-left { display: flex; align-items: center; gap: 10px; }
+.file-header-left svg { width: 20px; height: 20px; color: var(--primary); }
+.file-title { font-size: 19px; font-weight: 600; }
+
+.header-tools { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn-tool {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--primary); font-weight: 500;
+  background: none; border: none; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-tool:hover { opacity: 0.7; }
+.btn-tool svg { width: 15px; height: 15px; }
+.btn-tool-folder { color: var(--success); }
+.btn-select {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--primary); font-weight: 500;
+  background: none; border: none; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-select:hover { opacity: 0.7; }
+.btn-select svg { width: 14px; height: 14px; }
+
+/* ===== Breadcrumb ===== */
+.breadcrumb {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px;
+  margin-bottom: 16px; padding: 10px 14px;
+  background: var(--primaryLight); border-radius: var(--radiusSm);
+  font-size: 14px;
+}
+.crumb-link { color: var(--primary); cursor: pointer; font-weight: 500; }
+.crumb-link:hover { text-decoration: underline; }
+.crumb-current { color: var(--textMain); font-weight: 600; }
+.crumb-sep { color: var(--textAux); margin: 0 4px; }
+.crumb-root { color: var(--primary); cursor: pointer; font-weight: 500; }
+.crumb-root:hover { text-decoration: underline; }
+
+.file-render-container { min-height: 140px; }
+
+/* ===== Empty State ===== */
+.empty-state {
+  padding: 48px 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.empty-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--emptyBg);
+  box-shadow: var(--shadowEmpty);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.empty-icon svg { width: 28px; height: 28px; color: var(--textAux); }
+.empty-title { font-size: 16px; font-weight: 500; color: var(--textMain); }
+.empty-hint { font-size: 13px; color: var(--textAux); margin-top: 4px; }
+
+/* ===== File Item ===== */
+.file-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.file-item:last-child { border-bottom: none; }
+
+.file-icon-box {
+  width: 42px; height: 42px; border-radius: var(--radiusSm);
+  background: var(--primaryLight);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.file-icon-box svg { width: 19px; height: 19px; color: var(--primary); }
+
+.file-info { flex: 1; min-width: 0; }
+.file-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-size { font-size: 12px; color: var(--textAux); margin-top: 2px; }
+
+.file-progress {
+  width: 100%; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.file-progress .fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+.file-status { font-size: 12px; margin-top: 4px; }
+.file-status.uploading { color: var(--primary); }
+.file-status.done { color: var(--success); }
+.file-status.error { color: var(--danger); }
+
+.btn-download {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(35,132,237,0.1);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.btn-download:hover { background: rgba(35,132,237,0.2); }
+.btn-download svg { width: 15px; height: 15px; color: var(--primary); }
+
+.file-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-delete {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,89,89,0.1);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.btn-delete:hover { background: rgba(255,89,89,0.2); }
+.btn-delete svg { width: 15px; height: 15px; color: var(--danger); }
+
+/* ===== Select Mode ===== */
+.file-item.select-mode { 
+  transition: background 0.2s, border-color 0.2s; 
+  border-radius: var(--radiusSm); 
+  padding-left: 12px; padding-right: 12px; 
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.file-item.select-mode:hover { background: var(--pageBg); }
+.file-item.select-mode.selected { 
+  background: var(--primaryLight); 
+  border-color: rgba(35,132,237,0.3);
+}
+/* 文件夹行样式（非多选模式下整行可点击进入） */
+.file-item.folder-row { cursor: pointer; }
+.file-item.folder-row:hover { background: var(--pageBg); }
+
+.file-checkbox {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 2px solid var(--textAux);
+  background: var(--cardBg);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  margin-right: 4px;
+}
+.file-checkbox.checked {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.file-checkbox.checked svg { display: block; }
+.file-checkbox svg { display: none; width: 16px; height: 16px; color: #fff; }
+
+/* 选择模式下隐藏单个删除按钮 */
+.file-item.select-mode .btn-delete { display: none; }
+
+/* 底部操作栏 */
+.select-bar {
+  display: none;
+  align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  margin-top: 16px;
+  background: var(--cardBg);
+  border-radius: var(--radiusMd);
+  box-shadow: var(--shadowCard);
+}
+.select-bar.active { display: flex; }
+.select-bar-left { display: flex; align-items: center; gap: 10px; }
+.btn-select-all {
+  font-size: 14px; color: var(--primary); font-weight: 500;
+  background: none; border: none; cursor: pointer;
+}
+.btn-cancel {
+  font-size: 14px; color: var(--textAux);
+  background: none; border: none; cursor: pointer;
+}
+.btn-batch-delete {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 14px; color: #fff; font-weight: 500;
+  background: var(--danger);
+  border: none; cursor: pointer;
+  padding: 8px 18px; border-radius: 20px;
+  transition: opacity 0.2s;
+}
+.btn-batch-delete:hover { opacity: 0.85; }
+.btn-batch-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-batch-delete svg { width: 14px; height: 14px; }
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--textAux);
+  padding-top: 8px;
+}
+
+/* ===== SVG icon ===== */
+.icon { display: inline-block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: all 0.3s;
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal-card {
+  background: var(--cardBg); border-radius: var(--radiusMd);
+  width: 320px; padding: 24px; box-shadow: var(--shadowCard);
+  transform: translateY(20px); transition: transform 0.3s;
+}
+.modal-overlay.active .modal-card { transform: translateY(0); }
+.modal-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.modal-desc { font-size: 14px; color: var(--textAux); margin-bottom: 16px; line-height: 1.5; word-break: break-all; }
+.modal-input {
+  width: 100%; padding: 10px 12px; margin-bottom: 20px;
+  border: 1px solid var(--border); border-radius: var(--radiusSm);
+  font-size: 14px; color: var(--textMain); outline: none;
+  transition: border-color 0.2s;
+}
+.modal-input:focus { border-color: var(--primary); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+.btn-modal-cancel {
+  padding: 8px 16px; border-radius: var(--radiusSm);
+  border: 1px solid var(--border); background: #fff;
+  font-size: 14px; color: var(--textMain); cursor: pointer;
+}
+.btn-modal-cancel:hover { background: var(--pageBg); }
+.btn-modal-confirm {
+  padding: 8px 16px; border-radius: var(--radiusSm);
+  border: none; background: var(--danger);
+  font-size: 14px; color: #fff; cursor: pointer;
+}
+.btn-modal-confirm:hover { opacity: 0.85; }
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .main { padding: 16px 12px; }
+  .upload-area { padding: 32px 16px; }
+  .upload-icon { width: 64px; height: 64px; }
+  .upload-icon svg { width: 26px; height: 26px; }
+  .upload-title { font-size: 18px; }
+  .header { padding: 12px 16px; }
+  .header-addr { font-size: 12px; }
+  .header-tools { gap: 10px; }
+  .btn-tool span { display: none; }
+}
+</style>
+</head>
+<body class="bg-tech-soft grid-pattern">
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-logo" style="background:transparent;padding:0;box-shadow:none;">
+      <svg id="app-logo" data-name="应用图标" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="border-radius:var(--radiusSm);box-shadow:var(--shadowCard);">
+        <defs>
+          <style>
+            .logo-fill { fill: #005cdc; }
+            .logo-cloud { fill: #fff; }
+          </style>
+        </defs>
+        <rect class="logo-fill" width="512" height="512" rx="58" ry="58"/>
+        <path class="logo-cloud" d="M270.17,234.72c3.91,0,7.27,1.42,10.06,4.21l42.46,42.56c2.72,2.74,4.08,6.05,4.08,9.98s-1.35,7.47-4.03,10.16c-2.69,2.65-6.07,4.02-10.12,4.02s-7.34-1.37-10.07-4.11l-18.24-18.39v93.43c0,3.92-1.39,7.28-4.15,10.02-2.78,2.79-6.11,4.16-10.02,4.16s-7.23-1.37-10.01-4.16c-2.76-2.74-4.15-6.1-4.15-10.02v-93.43l-18.25,18.39c-2.72,2.74-6.07,4.12-10.06,4.12s-7.25-1.42-10-4.16c-2.78-2.79-4.16-6.1-4.16-10.02s1.36-7.09,4.09-9.98l42.46-42.56c2.81-2.84,6.16-4.21,10.07-4.21,0,0,.03,0,.03,0ZM298.48,121.25c17.25,0,33.75,3.4,49.48,10.17,15.73,6.76,29.28,15.79,40.63,27.19,11.36,11.39,20.41,24.96,27.15,40.71,6.73,15.79,10.1,32.3,10.12,49.6,0,16.13-2.94,31.58-8.79,46.43-5.86,14.85-13.82,27.85-23.89,39.01-10.06,11.16-22.08,20.42-36.04,27.75-13.97,7.33-28.81,11.91-44.52,13.67v-28.6c15.85-2.27,30.25-7.99,43.19-17.21,12.94-9.22,23.12-20.9,30.56-35.13,7.46-14.23,11.17-29.5,11.17-45.91,0-13.48-2.62-26.29-7.86-38.58-5.23-12.25-12.27-22.84-21.12-31.68-8.84-8.89-19.39-15.93-31.62-21.18-12.23-5.25-25.06-7.85-38.48-7.85-12.23,0-24.01,2.17-35.33,6.57-11.32,4.4-21.28,10.35-29.86,17.92-8.6,7.52-15.78,16.55-21.56,27.04-5.79,10.45-9.52,21.66-11.22,33.52h-29.42c-15.63,0-28.97,5.58-40.04,16.65-11.05,11.11-16.58,24.49-16.58,40.14,0,8.56,1.68,16.5,5.03,23.78,3.35,7.38,7.76,13.33,13.21,18.01,5.39,4.68,11.55,8.39,18.21,10.97,6.67,2.65,13.39,3.97,20.17,3.97h56.62v28.37h-56.62c-15.41,0-29.62-3.83-42.63-11.44-13.02-7.61-23.32-17.92-30.91-30.97-7.58-13-11.39-27.23-11.39-42.7s3.8-29.69,11.39-42.74c7.61-13,17.91-23.36,30.91-30.97,13-7.56,27.2-11.39,42.63-11.39h7.3c5.83-16.5,14.6-31.11,26.32-43.93,11.72-12.81,25.74-22.89,42.08-30.21,16.34-7.33,33.57-10.97,51.7-10.97h0,0Z"/>
+      </svg>
+    </div>
+    <h1 class="header-title">${APP_NAME}</h1>
+  </div>
+  <span class="header-addr" id="serverAddr">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+    <span id="addrText">连接中...</span>
+  </span>
+</header>
+
+<main class="main">
+  <!-- Upload Area -->
+  <section class="upload-area" id="uploadArea">
+    <input type="file" id="fileInput" multiple>
+    <div class="upload-icon-wrap">
+      <div class="upload-icon">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z M12 12v6 M9 15l3-3 3 3"/></svg>
+      </div>
+      <div class="upload-badge">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </div>
+    </div>
+    <h2 class="upload-title">点击或拖拽文件上传</h2>
+    <p class="upload-hint">图片、视频、安装包、文档、音乐、压缩包全格式支持</p>
+    <div class="upload-tags">
+      <span class="upload-tag primary">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+        同一局域网传输
+      </span>
+      <span class="upload-tag success">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        高速无流量消耗
+      </span>
+    </div>
+  </section>
+
+  <!-- File List -->
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-header-left">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <h3 class="file-title">已传输文件</h3>
+      </div>
+      <div class="header-tools">
+        <button class="btn-tool btn-tool-folder" id="mkdirBtn">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+          <span>新建文件夹</span>
+        </button>
+        <button class="btn-tool" id="refreshBtn">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>刷新</span>
+        </button>
+        <button class="btn-select" id="selectBtn">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>选择</span>
+        </button>
+      </div>
+    </div>
+    <!-- 路径面包屑 -->
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="file-render-container" id="fileContainer">
+      <div class="empty-state" id="emptyDom">
+        <div class="empty-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <p class="empty-title">暂无上传文件</p>
+        <p class="empty-hint">拖拽上方区域快速添加文件</p>
+      </div>
+    </div>
+    <!-- 底部批量操作栏 -->
+    <div class="select-bar" id="selectBar">
+      <div class="select-bar-left">
+        <button class="btn-select-all" id="selectAllBtn">全选</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button class="btn-cancel" id="cancelSelectBtn">取消</button>
+        <button class="btn-batch-delete" id="batchDeleteBtn" disabled>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span id="batchDeleteText">删除</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-card">
+      <h3 class="modal-title">确认删除</h3>
+      <p class="modal-desc" id="deleteModalDesc">确定要删除该文件吗？</p>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="deleteCancelBtn">取消</button>
+        <button class="btn-modal-confirm" id="deleteConfirmBtn">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Folder Modal -->
+  <div class="modal-overlay" id="mkdirModal">
+    <div class="modal-card">
+      <h3 class="modal-title">新建文件夹</h3>
+      <p class="modal-desc">在当前位置创建一个新的文件夹</p>
+      <input type="text" id="mkdirInput" class="modal-input" placeholder="请输入文件夹名称" maxlength="60">
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="mkdirCancelBtn">取消</button>
+        <button class="btn-modal-confirm" id="mkdirConfirmBtn" style="background:var(--primary);">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>请确认设备与手机/电脑连接同一局域网，并已启动 ${APP_NAME}</p>
+  </div>
+</main>
+
+<script>
+// ===== DOM refs =====
+var uploadArea = document.getElementById('uploadArea');
+var fileInput = document.getElementById('fileInput');
+var fileContainer = document.getElementById('fileContainer');
+var breadcrumb = document.getElementById('breadcrumb');
+var refreshBtn = document.getElementById('refreshBtn');
+var mkdirBtn = document.getElementById('mkdirBtn');
+var selectBtn = document.getElementById('selectBtn');
+var selectBar = document.getElementById('selectBar');
+var selectAllBtn = document.getElementById('selectAllBtn');
+var cancelSelectBtn = document.getElementById('cancelSelectBtn');
+var batchDeleteBtn = document.getElementById('batchDeleteBtn');
+var batchDeleteText = document.getElementById('batchDeleteText');
+
+var deleteModal = document.getElementById('deleteModal');
+var deleteModalDesc = document.getElementById('deleteModalDesc');
+var deleteCancelBtn = document.getElementById('deleteCancelBtn');
+var deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+var pendingDeletePath = null;
+
+var mkdirModal = document.getElementById('mkdirModal');
+var mkdirInput = document.getElementById('mkdirInput');
+var mkdirCancelBtn = document.getElementById('mkdirCancelBtn');
+var mkdirConfirmBtn = document.getElementById('mkdirConfirmBtn');
+
+// ===== State =====
+var selectMode = false;
+var selectedIds = {};      // 以相对路径(relPath)为 key
+var serverFilesCache = [];
+var isBatchDeleting = false;
+var currentPath = '';      // 当前所在目录的相对路径，'' 表示根目录
+var crumbPaths = [''];     // 面包屑各级路径，用于安全跳转
+
+// ===== Event bindings =====
+uploadArea.addEventListener('click', function(e) {
+  // 避免点击内部的文件输入（已隐藏）触发两次
+  if (e.target !== fileInput) fileInput.click();
+});
+
+fileInput.addEventListener('change', function(e) {
+  if (e.target.files.length > 0) uploadFiles(e.target.files);
+  fileInput.value = '';
+});
+
+['dragenter','dragover','dragleave','drop'].forEach(function(ev) {
+  uploadArea.addEventListener(ev, function(e) { e.preventDefault(); });
+});
+uploadArea.addEventListener('dragenter', function() { uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', function() { uploadArea.classList.remove('dragover'); });
+uploadArea.addEventListener('drop', function(e) {
+  uploadArea.classList.remove('dragover');
+  var items = e.dataTransfer.items;
+  if (items && items.length > 0 && items[0].webkitGetAsEntry) {
+    var hasEntry = false;
+    for (var i = 0; i < items.length; i++) {
+      var entry = items[i].webkitGetAsEntry();
+      if (entry) { hasEntry = true; traverseFileTree(entry, ''); }
+    }
+    if (!hasEntry && e.dataTransfer.files.length > 0) uploadFiles(e.dataTransfer.files);
+  } else if (e.dataTransfer.files.length > 0) {
+    uploadFiles(e.dataTransfer.files);
+  }
+});
+
+refreshBtn.addEventListener('click', function() {
+  if (!isBatchDeleting) loadFiles();
+});
+
+mkdirBtn.addEventListener('click', function() {
+  if (isBatchDeleting) return;
+  mkdirInput.value = '';
+  mkdirModal.classList.add('active');
+  setTimeout(function() { mkdirInput.focus(); }, 50);
+});
+
+mkdirCancelBtn.addEventListener('click', function() {
+  mkdirModal.classList.remove('active');
+});
+mkdirModal.addEventListener('click', function(e) {
+  if (e.target === mkdirModal) mkdirModal.classList.remove('active');
+});
+mkdirConfirmBtn.addEventListener('click', function() {
+  var name = mkdirInput.value.trim();
+  if (!name) { mkdirInput.focus(); return; }
+  doMkdir(name);
+});
+mkdirInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { mkdirConfirmBtn.click(); }
+});
+
+selectBtn.addEventListener('click', function() {
+  if (serverFilesCache.length === 0 || isBatchDeleting) return;
+  selectMode = true;
+  selectedIds = {};
+  selectBtn.style.display = 'none';
+  selectBar.classList.add('active');
+  renderServerFiles(serverFilesCache, true);
+});
+
+cancelSelectBtn.addEventListener('click', function() {
+  exitSelectMode();
+});
+
+selectAllBtn.addEventListener('click', function() {
+  var allSelected = serverFilesCache.every(function(f) { return selectedIds[f.id]; });
+  if (allSelected) {
+    selectedIds = {};
+    selectAllBtn.textContent = '全选';
+  } else {
+    serverFilesCache.forEach(function(f) { selectedIds[f.id] = true; });
+    selectAllBtn.textContent = '取消全选';
+  }
+  updateBatchBtn();
+  renderServerFiles(serverFilesCache, true);
+});
+
+batchDeleteBtn.addEventListener('click', function() {
+  if (isBatchDeleting) return;
+  var ids = Object.keys(selectedIds).filter(function(k) { return selectedIds[k]; });
+  if (ids.length === 0) return;
+  pendingDeletePath = '__BATCH__';
+  deleteModalDesc.textContent = '确定要删除选中的 ' + ids.length + ' 个项目吗？此操作不可恢复。';
+  deleteModal.classList.add('active');
+});
+
+deleteCancelBtn.addEventListener('click', function() {
+  deleteModal.classList.remove('active');
+  pendingDeletePath = null;
+});
+
+deleteConfirmBtn.addEventListener('click', function() {
+  deleteModal.classList.remove('active');
+  if (pendingDeletePath === '__BATCH__') {
+    executeBatchDelete();
+  } else if (pendingDeletePath) {
+    deleteByPath(pendingDeletePath);
+  }
+  pendingDeletePath = null;
+});
+
+function confirmDeleteByIndex(i) {
+  var f = serverFilesCache[i];
+  if (!f) return;
+  pendingDeletePath = f.id;
+  deleteModalDesc.textContent = (f.isDirectory ? '确定要删除文件夹 "' : '确定要删除文件 "') + f.name + '" 吗？此操作不可恢复。';
+  deleteModal.classList.add('active');
+}
+
+function executeBatchDelete() {
+  isBatchDeleting = true;
+  batchDeleteBtn.disabled = true;
+  batchDeleteText.textContent = '删除中...';
+  selectAllBtn.disabled = true;
+  cancelSelectBtn.disabled = true;
+
+  var ids = Object.keys(selectedIds).filter(function(k) { return selectedIds[k]; });
+  var completed = 0;
+  var failed = 0;
+  ids.forEach(function(path) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/api/files?path=' + encodeURIComponent(path));
+    xhr.addEventListener('load', function() {
+      if (xhr.status < 200 || xhr.status >= 300) failed++;
+      completed++;
+      if (completed === ids.length) {
+        selectAllBtn.disabled = false;
+        cancelSelectBtn.disabled = false;
+        if (failed > 0) {
+          batchDeleteText.textContent = failed + '个删除失败';
+          setTimeout(function() { exitSelectMode(); loadFiles(); }, 1200);
+        } else {
+          exitSelectMode();
+          loadFiles();
+        }
+      }
+    });
+    xhr.addEventListener('error', function() {
+      failed++;
+      completed++;
+      if (completed === ids.length) {
+        selectAllBtn.disabled = false;
+        cancelSelectBtn.disabled = false;
+        batchDeleteText.textContent = failed + '个删除失败';
+        setTimeout(function() { exitSelectMode(); loadFiles(); }, 1200);
+      }
+    });
+    xhr.send();
+  });
+}
+
+function exitSelectMode() {
+  selectMode = false;
+  selectedIds = {};
+  isBatchDeleting = false;
+  selectBtn.style.display = '';
+  selectBar.classList.remove('active');
+  selectAllBtn.textContent = '全选';
+  batchDeleteBtn.disabled = true;
+  batchDeleteText.textContent = '删除';
+  renderServerFiles(serverFilesCache);
+}
+
+function updateBatchBtn() {
+  var count = Object.keys(selectedIds).filter(function(k) { return selectedIds[k]; }).length;
+  batchDeleteBtn.disabled = count === 0;
+  batchDeleteText.textContent = count > 0 ? '删除(' + count + ')' : '删除';
+}
+
+function toggleSelectByIndex(i) {
+  var f = serverFilesCache[i];
+  if (!f) return;
+  toggleSelect(f.id);
+}
+
+function toggleSelect(id) {
+  if (selectedIds[id]) {
+    delete selectedIds[id];
+  } else {
+    selectedIds[id] = true;
+  }
+  var allSelected = serverFilesCache.every(function(f) { return selectedIds[f.id]; });
+  selectAllBtn.textContent = allSelected ? '取消全选' : '全选';
+  updateBatchBtn();
+  renderServerFiles(serverFilesCache, true);
+}
+
+function utf8ToBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+// ===== Navigation =====
+function navigateTo(path) {
+  currentPath = path || '';
+  loadFiles();
+}
+
+function navigateToIndex(i) {
+  navigateTo(crumbPaths[i] || '');
+}
+
+function enterFolderByIndex(i) {
+  var f = serverFilesCache[i];
+  if (!f || !f.isDirectory) return;
+  if (selectMode) { toggleSelectByIndex(i); return; }
+  navigateTo(f.id);
+}
+
+function renderBreadcrumb() {
+  var parts = currentPath ? currentPath.split('/') : [];
+  crumbPaths = [''];
+  var html = '<span class="crumb-root" onclick="navigateToIndex(0)">根目录</span>';
+  var acc = '';
+  for (var i = 0; i < parts.length; i++) {
+    acc = acc ? (acc + '/' + parts[i]) : parts[i];
+    crumbPaths.push(acc);
+    html += '<span class="crumb-sep">/</span>';
+    if (i === parts.length - 1) {
+      html += '<span class="crumb-current">' + escapeHtml(parts[i]) + '</span>';
+    } else {
+      var idx = i + 1;
+      html += '<span class="crumb-link" onclick="navigateToIndex(' + idx + ')">' + escapeHtml(parts[i]) + '</span>';
+    }
+  }
+  breadcrumb.innerHTML = html;
+}
+
+// ===== Upload logic =====
+function uploadFiles(files) {
+  for (var i = 0; i < files.length; i++) {
+    uploadSingleFile(files[i], currentPath);
+  }
+}
+
+function readEntriesRecursive(dirReader, callback) {
+  var entries = [];
+  var readBatch = function() {
+    dirReader.readEntries(function(batch) {
+      if (batch.length === 0) {
+        callback(entries);
+      } else {
+        entries = entries.concat(Array.from(batch));
+        readBatch();
+      }
+    }, function() { callback(entries); });
+  };
+  readBatch();
+}
+
+function traverseFileTree(item, path) {
+  path = path || '';
+  if (item.isFile) {
+    item.file(function(file) {
+      var relDir = path.replace(/\/$/, '');
+      var targetDir = currentPath ? (relDir ? (currentPath + '/' + relDir) : currentPath) : relDir;
+      uploadSingleFile(file, targetDir);
+    });
+  } else if (item.isDirectory) {
+    var dirReader = item.createReader();
+    readEntriesRecursive(dirReader, function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        traverseFileTree(entries[i], path + item.name + '/');
+      }
+    });
+  }
+}
+
+function uploadSingleFile(file, targetDir) {
+  // 在列表顶部立即创建上传条目
+  var itemDom = createFileItemDom(file.name, file.size);
+  // 删除空状态（若存在）
+  var empty = document.getElementById('emptyDom');
+  if (empty) empty.remove();
+  fileContainer.insertBefore(itemDom, fileContainer.firstChild);
+
+  var progressBar = itemDom.querySelector('.fill');
+  var statusText = itemDom.querySelector('.file-status');
+  var xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener('progress', function(e) {
+    if (e.lengthComputable) {
+      var pct = Math.round(e.loaded / e.total * 100);
+      progressBar.style.width = pct + '%';
+      // 数据发完后电视端还要解码+写盘，这段不再有发送进度，
+      // 明确提示"服务器保存中"，避免用户以为卡住或已结束。
+      statusText.textContent = pct >= 100 ? '服务器保存中...' : ('正在上传 ' + pct + '%');
+      statusText.className = 'file-status uploading';
+    }
+  });
+
+  xhr.addEventListener('load', function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      statusText.textContent = '上传完成';
+      statusText.className = 'file-status done';
+      // 等文件列表刷新返回（文件条目已接管显示）再移除上传条目，
+      // 避免「上传完成条目 + 文件列表条目」短暂重名并存（旧设计保留 4 秒会被看成两个文件）
+      setTimeout(function() {
+        loadFiles(function() { itemDom.remove(); });
+      }, 300);
+    } else {
+      statusText.textContent = '上传失败';
+      statusText.className = 'file-status error';
+      setTimeout(function() { itemDom.remove(); }, 6000);
+    }
+  });
+
+  xhr.addEventListener('error', function() {
+    statusText.textContent = '上传失败';
+    statusText.className = 'file-status error';
+    setTimeout(function() { itemDom.remove(); }, 6000);
+  });
+
+  var url = '/api/upload';
+  if (targetDir) url += '?path=' + encodeURIComponent(targetDir);
+  url += (targetDir ? '&' : '?') + 'b64name=' + encodeURIComponent(utf8ToBase64(file.name));
+  xhr.open('POST', url);
+  // 直接把文件本体作为请求体（octet-stream）：服务端边收边写正式目录、收完原子改名，
+  // 省去 multipart 的中转桶+分片提取两次额外读写（此前 100% 后还要等好几秒"服务器保存中"）。
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  xhr.send(file);
+}
+
+function createFileItemDom(name, size) {
+  var div = document.createElement('div');
+  // uploading-item 标记：定时刷新重建列表时会先把这类条目收集起来再插回，避免被清掉
+  div.className = 'file-item uploading-item';
+  var iconSvg = getFileIconSvg(name);
+  div.innerHTML =
+    '<div class="file-icon-box">' + iconSvg + '</div>' +
+    '<div class="file-info">' +
+      '<p class="file-name">' + escapeHtml(name) + '</p>' +
+      '<p class="file-size">' + formatSize(size) + '</p>' +
+      '<div class="file-progress"><div class="fill" style="width:0%"></div></div>' +
+      '<span class="file-status uploading">正在上传 0%</span>' +
+    '</div>' +
+    '<button class="btn-delete">' +
+      '<svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+    '</button>';
+  return div;
+}
+
+function doMkdir(name) {
+  var url = '/api/mkdir?name=' + encodeURIComponent(name);
+  if (currentPath) url += '&path=' + encodeURIComponent(currentPath);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.addEventListener('load', function() {
+    mkdirModal.classList.remove('active');
+    if (xhr.status >= 200 && xhr.status < 300) {
+      loadFiles();
+    } else {
+      alert('创建文件夹失败，请重试');
+    }
+  });
+  xhr.addEventListener('error', function() {
+    mkdirModal.classList.remove('active');
+    alert('创建文件夹失败，请重试');
+  });
+  xhr.send();
+}
+
+// ===== Delete by path =====
+function deleteByPath(path) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('DELETE', '/api/files?path=' + encodeURIComponent(path));
+  xhr.addEventListener('load', function() { loadFiles(); });
+  xhr.send();
+}
+
+// ===== Load & Render =====
+function loadFiles(done) {
+  var url = '/api/files' + (currentPath ? ('?path=' + encodeURIComponent(currentPath)) : '');
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.addEventListener('load', function() {
+    if (xhr.status === 200) {
+      try {
+        renderServerFiles(JSON.parse(xhr.responseText));
+      } catch(e) {}
+    }
+    if (done) done();
+  });
+  // 请求失败也要回调，否则完成条目永远残留（定时刷新会因 uploading-item 一直跳过）
+  xhr.addEventListener('error', function() { if (done) done(); });
+  xhr.send();
+}
+
+// 自动定时刷新文件列表（每 3 秒刷新一次）
+setInterval(function() {
+  if (selectMode || isBatchDeleting) return;
+  // 有正在上传的条目时不刷新列表：避免重建 innerHTML 打断上传进度显示
+  // （即便 renderServerFiles 已做保留处理，这里再兜一道，彻底防止闪烁）
+  if (fileContainer.querySelector('.file-item.uploading-item')) return;
+  loadFiles();
+}, 3000);
+
+function renderServerFiles(files, forceUpdateInSelectMode) {
+  if ((selectMode && !forceUpdateInSelectMode) || isBatchDeleting) return;
+
+  files = (files || []).slice().sort(function(a, b) {
+    if (!!a.isDirectory !== !!b.isDirectory) return a.isDirectory ? -1 : 1;
+    return (b.lastModified || 0) - (a.lastModified || 0);
+  });
+  serverFilesCache = files;
+  renderBreadcrumb();
+
+  // 定时刷新会重建整个列表 DOM，先把仍在上传中的条目收集起来，重建完再插回顶部，
+  // 否则上传进度条目每 3 秒被冲掉一次（表现为"闪一下就不见了"）。
+  var uploadingNodes = Array.prototype.slice.call(fileContainer.querySelectorAll('.file-item.uploading-item'));
+
+  if (!files || files.length === 0) {
+    if (uploadingNodes.length > 0) {
+      // 仍有上传中的条目：不显示"暂无上传文件"，只保留上传区
+      fileContainer.innerHTML = '';
+      selectBtn.style.display = 'none';
+    } else {
+      fileContainer.innerHTML =
+        '<div class="empty-state" id="emptyDom">' +
+          '<div class="empty-icon">' +
+            '<svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
+          '</div>' +
+          '<p class="empty-title">' + (currentPath ? '该文件夹为空' : '暂无上传文件') + '</p>' +
+          '<p class="empty-hint">拖拽上方区域快速添加文件</p>' +
+        '</div>';
+      if (selectMode) exitSelectMode();
+      selectBtn.style.display = 'none';
+      return;
+    }
+  }
+
+  if (!isBatchDeleting && files.length > 0) selectBtn.style.display = '';
+
+  var html = '';
+  for (var i = 0; i < files.length; i++) {
+    var f = files[i];
+    var isChecked = selectedIds[f.id];
+    var iconSvg;
+    var sizeText;
+
+    if (f.isDirectory) {
+      iconSvg = getFolderIconSvg();
+      sizeText = '文件夹';
+    } else {
+      iconSvg = getFileIconSvg(f.name);
+      sizeText = formatSize(f.size);
+    }
+
+    if (selectMode) {
+      html +=
+        '<div class="file-item select-mode' + (isChecked ? ' selected' : '') + '" onclick="toggleSelectByIndex(' + i + ')">' +
+          '<div class="file-checkbox' + (isChecked ? ' checked' : '') + '">' +
+            '<svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' +
+          '</div>' +
+          '<div class="file-icon-box">' + iconSvg + '</div>' +
+          '<div class="file-info">' +
+            '<p class="file-name">' + escapeHtml(f.name) + '</p>' +
+            '<p class="file-size">' + sizeText + '</p>' +
+          '</div>' +
+        '</div>';
+    } else if (f.isDirectory) {
+      html +=
+        '<div class="file-item folder-row" onclick="enterFolderByIndex(' + i + ')">' +
+          '<div class="file-icon-box">' + iconSvg + '</div>' +
+          '<div class="file-info">' +
+            '<p class="file-name">' + escapeHtml(f.name) + '</p>' +
+            '<p class="file-size">' + sizeText + '</p>' +
+          '</div>' +
+          '<button class="btn-delete" onclick="event.stopPropagation();confirmDeleteByIndex(' + i + ')" title="删除文件夹">' +
+            '<svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '</button>' +
+        '</div>';
+    } else {
+      html +=
+        '<div class="file-item">' +
+          '<div class="file-icon-box">' + iconSvg + '</div>' +
+          '<div class="file-info">' +
+            '<p class="file-name">' + escapeHtml(f.name) + '</p>' +
+            '<p class="file-size">' + sizeText + '</p>' +
+          '</div>' +
+          '<div class="file-actions">' +
+            '<a href="/api/files/download?path=' + encodeURIComponent(f.id) + '" class="btn-download" title="下载文件" download>' +
+              '<svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>' +
+            '</a>' +
+            '<button class="btn-delete" onclick="confirmDeleteByIndex(' + i + ')" title="删除文件">' +
+              '<svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+    }
+  }
+  fileContainer.innerHTML = html;
+
+  // 重建 innerHTML 会把上传条目清掉，这里把它们插回列表顶部（倒序插保持原有顺序）
+  for (var u = uploadingNodes.length - 1; u >= 0; u--) {
+    fileContainer.insertBefore(uploadingNodes[u], fileContainer.firstChild);
+  }
+}
+
+// ===== Helpers =====
+function getFolderIconSvg() {
+  return '<svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>';
+}
+
+function getFileIconSvg(name) {
+  var ext = name.split('.').pop().toLowerCase();
+  var type = 'file';
+  if (['apk'].indexOf(ext) >= 0) type = 'archive';
+  else if (['mp4','mov','mkv','avi','flv'].indexOf(ext) >= 0) type = 'video';
+  else if (['jpg','png','jpeg','gif','webp','svg','bmp'].indexOf(ext) >= 0) type = 'image';
+  else if (['mp3','wav','flac','aac','ogg'].indexOf(ext) >= 0) type = 'audio';
+  else if (['pdf','doc','docx','xls','xlsx','ppt','txt'].indexOf(ext) >= 0) type = 'doc';
+  else if (['zip','rar','7z','tar','gz'].indexOf(ext) >= 0) type = 'archive';
+
+  var paths = {
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+    video: '<rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M10 8l6 4-6 4V8z"/>',
+    audio: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    doc: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>',
+    archive: '<path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/>',
+    file: '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/>'
+  };
+  return '<svg class="icon" viewBox="0 0 24 24">' + paths[type] + '</svg>';
+}
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(2) + ' KB';
+  if (b < 1073741824) return (b / 1048576).toFixed(2) + ' MB';
+  return (b / 1073741824).toFixed(2) + ' GB';
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== Init =====
+document.getElementById('addrText').textContent = location.host;
+loadFiles();
+</script>
+</body>
+</html>

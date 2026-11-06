@@ -1,0 +1,17 @@
+<resources>
+    <!-- Background gradient -->
+    <color name="bg_gradient_start">#FF0a1628</color>
+    <color name="bg_gradient_mid">#FF0d2137</color>
+    <color name="bg_gradient_end">#FF1b3a5f</color>
+
+    <!-- Functional colors -->
+    <color name="color_blue">#FF1E88E5</color>
+    <color name="color_green">#FF66BB6A</color>
+    <color name="color_orange">#FFFF7043</color>
+    <color name="color_purple">#FFAB47BC</color>
+    <color name="color_yellow">#FFFFCA28</color>
+    <color name="color_cyan">#FF26C6DA</color>
+    <color name="color_red">#FFEF5350</color>
+    <color name="brand_primary">#FFF97316</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
