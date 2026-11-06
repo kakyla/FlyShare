@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-说明（仅作内部参考，不影响许可证效力）：
-- 本文件为「先闭源养用户、日后开源」路线的预置许可证草案，目前仓库仍为私有。
-- 当前选用 MIT（最宽松、最易理解）。若日后希望保留专利保护、明确署名义务，
-  可改为 Apache License 2.0（安卓生态更常见，且兼容本项目依赖如 NanoHTTPD、smbj）。
-- 将仓库设为公开即视为正式采用本许可证，请在开源前确认：
-  1. 第三方依赖的许可证均允许开源再分发（本项目依赖多为 Apache-2.0 / MIT，兼容）；
-  2. 签名密钥、密码、服务端凭证等绝不进入本仓库（已通过 .gitignore 隔离）。
-- 版权人署名如需变更（例如改为「中晟工程建设集团」），直接修改上方 Copyright 行即可。
