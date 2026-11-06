@@ -108,15 +108,18 @@ keystore 信息，具体见 [`app-android/LOCAL-CONFIG.md`](app-android/LOCAL-CO
 
 ### 关于自动升级地址
 
-应用读取的更新配置地址由 `UPDATE_JSON_URL` 注入（见 `app/build.gradle.kts` 的 `buildConfigField`），
-该值同样通过 `LOCAL-CONFIG.md` 里的三种方式提供，不写进被跟踪文件。
-不配置时默认指向 GitHub Releases 模板：
+应用采用**双源**：先试 Gitee（国内可达的仓库固定文件），失败再试 GitHub Releases 附件。
+两个地址由 `UPDATE_JSON_URL` / `UPDATE_JSON_URL_FALLBACK` 注入（见 `app/build.gradle.kts` 的
+`buildConfigField`），都可用 `LOCAL-CONFIG.md` 里的三种方式覆盖，不写进被跟踪文件。默认值为：
 
 ```
+https://gitee.com/kakyla/FlyShare/raw/master/update.json
 https://github.com/kakyla/FlyShare/releases/latest/download/update.json
 ```
 
-上面是本项目仓库的默认地址；如果你 fork 了这份代码，请改成你自己的仓库路径或更新服务器地址。更新配置文件形如：
+Gitee 那份就是本仓库根目录的 `update.json`（每次发版同步更新）；GitHub 那份放在最新 Release 的附件里。
+两份版本号与指纹相同，只有 `apkUrl` 不同：国内走 Gitee 发行版附件、国外走 GitHub 附件。
+如果你 fork 了这份代码，请把两个默认地址都改成自己的仓库路径或更新服务器地址。更新配置文件形如：
 
 ```json
 {

@@ -13,14 +13,16 @@ gradlew.bat :app:assembleRelease \
   -PRELEASE_STORE_PASSWORD=<你的密码> \
   -PRELEASE_KEY_ALIAS=<你的别名> \
   -PRELEASE_KEY_PASSWORD=<你的密码> \
-  -PUPDATE_JSON_URL=https://<你的地址>/update.json
+  -PUPDATE_JSON_URL=https://<你的主源>/update.json \
+  -PUPDATE_JSON_URL_FALLBACK=https://<你的备源>/update.json
 ```
 
 ## 方式 B：环境变量（Gradle 把 `ORG_GRADLE_PROJECT_<名称>` 映射为 project property）
 
 ```powershell
 $env:ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD = "<你的密码>"
-$env:ORG_GRADLE_PROJECT_UPDATE_JSON_URL = "https://<你的地址>/update.json"
+$env:ORG_GRADLE_PROJECT_UPDATE_JSON_URL = "https://<你的主源>/update.json"
+$env:ORG_GRADLE_PROJECT_UPDATE_JSON_URL_FALLBACK = "https://<你的备源>/update.json"
 ```
 
 ## 方式 C：用户级 `~/.gradle/gradle.properties`（全局、不入库，最省事）
@@ -30,6 +32,6 @@ $env:ORG_GRADLE_PROJECT_UPDATE_JSON_URL = "https://<你的地址>/update.json"
 ---
 
 - 四个签名属性**必须同时提供**，`release` 构建才会启用正式签名；否则产出未签名包（仅供编译验证）。
-- 不提供 `UPDATE_JSON_URL` 时，应用默认使用本项目 GitHub Releases 地址；
-  fork 后请改成你自己的仓库路径。
+- 应用采用**双源**：先试 `UPDATE_JSON_URL`（主源），失败再试 `UPDATE_JSON_URL_FALLBACK`（备源）。
+  不提供时默认先试本项目 Gitee 仓库固定文件、再试 GitHub Releases 附件；fork 后请把两个默认地址都改成自己的仓库路径。
 - 签名密钥永远不要放进仓库。自己编译的包与官方发布包签名不同，不能覆盖安装、也不会接收官方升级。
