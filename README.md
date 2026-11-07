@@ -49,7 +49,7 @@
 
 > 截图取自 v2.6.14，包含 Android TV 实机界面与配套的网页端；画面中的 192.168.x.x 是局域网地址，不是公网地址。
 
-手机端（竖屏）与电视端（横屏）的完整轮播预览见项目主页：https://kakyla.github.io/FlyShare/
+车机、电视与手机三端的完整轮播预览见项目主页：https://kakyla.github.io/FlyShare/
 
 ## 安全须知
 
