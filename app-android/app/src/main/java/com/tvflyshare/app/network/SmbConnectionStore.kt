@@ -2,71 +2,48 @@ package com.tvflyshare.app.network
 
 import android.content.Context
 import android.util.Log
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 import org.json.JSONArray
 import org.json.JSONObject
 
 /**
  * SMB 连接记录持久化存储
  *
- * 用 EncryptedSharedPreferences 存 JSON 数组，每条记录包含 host/share/user/pass。
- * 密码字段经 Android Keystore 加密，root 设备或 adb backup 也读不出明文。
+ * 用 [SecureConnectionPrefs] 存 JSON 数组，每条记录包含 host/share/user/pass。
+ * 正常时由系统 Keystore 加密；系统加密组件不可用时改用本机软件密钥加密，
+ * 任何情况下盘上都不写明文，也不会因加密组件故障闪退或丢记录。
+ * 软件兜底的密钥与密文同在 App 私有目录，root 设备仍可还原；
+ * allowBackup=false 已挡住 adb 备份导出。保护级别详见 [SecureConnectionPrefs] 注释。
  *
  * 线程安全：所有写操作（save/moveToFront/remove/removeAll）都用 synchronized 串行化，
  * 避免并发 read-modify-write 丢更新。
  *
- * 迁移：首次升级时若检测到旧明文 prefs（smb_connections）有数据，会读取后写入加密 prefs 再清除旧数据。
+ * 防丢记录（2026-11-08 审计修复）：读取时把主、备引擎与历史明文文件的内容**全部合并**，
+ * 按 host+share 去重、新的优先；任何一份解不开或内容损坏时置 [writeBlocked]，
+ * 拒绝覆盖写，避免「读成空列表 → 下次保存把整份记录盖掉」。
+ *
+ * 回迁：历史明文文件（更早期的 smb_connections 与降级期产生的 *_plain）里的记录
+ * 并回当前加密存储、写回成功后才清空原文件。
  */
-class SmbConnectionStore(context: Context) {
+class SmbConnectionStore(
+    context: Context,
+    // 允许单测注入存储实现，用来覆盖"主、备引擎同时有数据"这类真机上难复现的场景；
+    // 正常调用仍走默认参数，行为不变。
+    private val securePrefs: SecureConnectionPrefs = SecureConnectionPrefs(
+        context.applicationContext, ENCRYPTED_PREFS_NAME, KEY_LIST
+    ),
+) {
 
     companion object {
         private const val TAG = "SmbConnectionStore"
         private const val KEY_LIST = "smb_connection_list"
         private const val LEGACY_PREFS_NAME = "smb_connections"
         private const val ENCRYPTED_PREFS_NAME = "smb_connections_encrypted"
-        private const val MIGRATION_DONE_KEY = "migration_done"
     }
 
-    private val appContext = context.applicationContext
     private val lock = Any()
 
-    private val prefs by lazy {
-        try {
-            val masterKey = MasterKey.Builder(appContext)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build()
-            EncryptedSharedPreferences.create(
-                appContext,
-                ENCRYPTED_PREFS_NAME,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-            )
-        } catch (e: Exception) {
-            // 2026-10-04 审计 P1 修复：Keystore 损坏/低版本设备缺支撑时 lazy 初始化本身会抛，
-            // 之前 save/moveToFront/removeAll/getAll 全部入口都会闪退——降级为普通 SharedPreferences
-            //（连接记录不加密但功能可用），日志留痕便于排查
-            Log.e(TAG, "EncryptedSharedPreferences unavailable, falling back to plain prefs", e)
-            appContext.getSharedPreferences(ENCRYPTED_PREFS_NAME + "_plain", Context.MODE_PRIVATE)
-        }
-    }
-
-    /** 一次性迁移：把旧明文 SharedPreferences 数据搬到加密 prefs */
-    @Synchronized
-    private fun migrateIfNeeded() {
-        if (prefs.getBoolean(MIGRATION_DONE_KEY, false)) return
-        val legacy = appContext.getSharedPreferences(LEGACY_PREFS_NAME, Context.MODE_PRIVATE)
-        val legacyJson = legacy.getString(KEY_LIST, null)
-        if (!legacyJson.isNullOrBlank()) {
-            // 旧数据搬到加密 prefs
-            prefs.edit().putString(KEY_LIST, legacyJson).apply()
-            Log.i(TAG, "Migrated ${legacyJson.length} chars from legacy prefs to encrypted prefs")
-        }
-        // 清除旧明文数据（含 last_* 字段）
-        legacy.edit().clear().apply()
-        prefs.edit().putBoolean(MIGRATION_DONE_KEY, true).apply()
-    }
+    /** 存储处于不可用/损坏状态：允许读、禁止写，防止把用户的连接记录覆盖成空。 */
+    private var writeBlocked = false
 
     data class SmbConnection(
         val host: String,
@@ -75,15 +52,64 @@ class SmbConnectionStore(context: Context) {
         val password: String,
     )
 
-    /** 获取所有已保存的连接记录 */
-    fun getAll(): List<SmbConnection> {
-        return try {
-            migrateIfNeeded()
-            // 2026-10-04 审计 P2 修复：prefs.getString（解密）原先在 try 外，Keystore 失效场景直接崩溃
-            val json = prefs.getString(KEY_LIST, null) ?: return emptyList()
+    /**
+     * 读取当前记录，顺带回迁历史明文文件。
+     *
+     * 主、备引擎与历史明文的内容按写入序号从新到旧合并，先到先得：降级期的新密码
+     * 不会被主引擎里的旧密码盖回去，降级前的旧记录也不会在新引擎恢复后凭空消失。
+     */
+    @Synchronized
+    private fun currentList(): List<SmbConnection> {
+        val snap = securePrefs.snapshot()
+        writeBlocked = snap.hasUnreadable
+        if (writeBlocked) {
+            Log.e(TAG, "存储里有解不开的内容，暂停回迁与写入以保护原数据")
+        }
+
+        val pending = if (writeBlocked) {
+            emptyList()
+        } else {
+            listOf(ENCRYPTED_PREFS_NAME + "_plain", LEGACY_PREFS_NAME)
+                .mapNotNull { name -> securePrefs.peekPlainFrom(name)?.let { name to it } }
+        }
+
+        val merged = mutableListOf<SmbConnection>()
+        (snap.values + pending.map { it.second }).forEach { json ->
+            if (isCorruptJson(json)) {
+                writeBlocked = true
+                Log.e(TAG, "保存的连接内容损坏，暂停写入以保护原数据")
+            }
+            parseList(json).forEach { item ->
+                if (merged.none { it.host == item.host && it.share == item.share }) {
+                    merged.add(item)
+                }
+            }
+        }
+
+        // 写回成功才清历史明文：先清后写一旦写失败，那份记录就真的没了
+        if (pending.isNotEmpty() && !writeBlocked) {
+            if (writeList(merged)) {
+                pending.forEach { securePrefs.clearPlainFrom(it.first) }
+                Log.i(TAG, "回迁 ${pending.size} 份历史明文记录到加密存储")
+            } else {
+                Log.w(TAG, "回迁写回失败，历史明文文件保留，下次读取重试")
+            }
+        }
+        return merged
+    }
+
+    /** 合法 JSON 空数组不算损坏；解析不了、或有条目却一条都取不出来，都按损坏处理。 */
+    private fun isCorruptJson(json: String): Boolean {
+        val arr = runCatching { JSONArray(json) }.getOrNull() ?: return true
+        return arr.length() > 0 && parseList(json).isEmpty()
+    }
+
+    /** 单条坏数据跳过而非整体清空，避免一次 save 把其余记录全覆盖掉。 */
+    private fun parseList(json: String?): List<SmbConnection> {
+        if (json.isNullOrBlank()) return emptyList()
+        return runCatching {
             val arr = JSONArray(json)
             (0 until arr.length()).mapNotNull { i ->
-                // 2026-10-04 审计 P2 修复：单条损坏记录跳过而非整体清空（与 FtpConnectionStore 同规）
                 runCatching {
                     val obj = arr.getJSONObject(i)
                     SmbConnection(
@@ -94,12 +120,20 @@ class SmbConnectionStore(context: Context) {
                     )
                 }.getOrNull()
             }
-        } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-            // JSON 损坏时记录日志，便于排查（之前静默吞异常会导致连接莫名消失而无迹可寻）
-            Log.w(TAG, "Failed to parse saved connections JSON", e)
+        }.getOrElse {
+            Log.w(TAG, "Failed to parse saved connections JSON", it)
             emptyList()
         }
+    }
+
+    /** 获取所有已保存的连接记录 */
+    fun getAll(): List<SmbConnection> = try {
+        currentList()
+    } catch (e: Exception) {
+        if (e is kotlinx.coroutines.CancellationException) throw e
+        writeBlocked = true
+        Log.w(TAG, "读取保存的连接失败，暂停写入以保护原数据", e)
+        emptyList()
     }
 
     /** 保存或更新一条记录（以 host+share 作为唯一键） */
@@ -152,7 +186,12 @@ class SmbConnectionStore(context: Context) {
         }
     }
 
-    private fun writeList(list: List<SmbConnection>) {
+    /** @return 是否真的落盘；存储状态异常时返回 false 且绝不覆盖原数据。 */
+    private fun writeList(list: List<SmbConnection>): Boolean {
+        if (writeBlocked) {
+            Log.e(TAG, "存储状态异常，拒绝覆盖写入以保护原有记录")
+            return false
+        }
         val arr = JSONArray()
         list.forEach { conn ->
             arr.put(JSONObject().apply {
@@ -162,7 +201,6 @@ class SmbConnectionStore(context: Context) {
                 put("password", conn.password)
             })
         }
-        // 合并为一次 edit().apply()，避免两次写入
-        prefs.edit().putString(KEY_LIST, arr.toString()).apply()
+        return securePrefs.save(arr.toString())
     }
 }

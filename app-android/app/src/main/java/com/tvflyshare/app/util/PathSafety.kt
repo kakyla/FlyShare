@@ -41,3 +41,14 @@ val HIDDEN_TEMP_PREFIXES = listOf(
 
 /** 文件名是否为传输中间态的隐藏临时文件（不应出现在文件列表中） */
 fun isHiddenTempFile(name: String): Boolean = HIDDEN_TEMP_PREFIXES.any { name.startsWith(it) }
+
+/**
+ * App 自己写进共享目录的内部文件，不得通过无鉴权网页端被列出、下载、改名或删除。
+ *
+ * 目前只有崩溃日志：里面有设备型号、系统版本、完整堆栈和内部路径，虽然不含密码，
+ * 但共享根正是网页服务的根，任何人连上同一 WiFi 就能取走（2026-11-08 安全审计）。
+ * 这里只挡网页端的访问，用户仍可直接从文件系统查看/取走日志，取日志方式不变。
+ * 用前缀＋后缀匹配，将来轮转出 crash_log.2.txt 之类也一并挡住。
+ */
+fun isPrivateAppFile(name: String): Boolean =
+    name.startsWith("crash_log") && name.endsWith(".txt")

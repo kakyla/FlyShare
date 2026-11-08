@@ -53,6 +53,7 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
         private const val PREFS_KEY_LAST_DOWNLOAD_VERSION = "last_download_version"
         private const val PREFS_KEY_LAST_DOWNLOAD_ID = "last_download_id"
         private const val PREFS_KEY_LAST_DOWNLOAD_URL = "last_download_url"
+        // 文件指纹是必需项（2026-11-08 审计修复），缺了就不允许下载/安装
     }
 
     private val repository = UpdateRepository()
@@ -66,7 +67,7 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
     // 2026-10-04 审计 P1 修复：installApk 的 check-then-act 非原子（广播/轮询/缓存命中三条路径
     // 都可能触发），CAS 保证并发时仅一路拉起安装器
     private val installing = java.util.concurrent.atomic.AtomicBoolean(false)
-    // 2026-10-04 审计 P1 修复：当前更新包的期望 SHA-256（update.json 未携带时为 null，跳过校验）
+    // 当前更新包的期望 SHA-256。更新源已强制要求携带，安装前必校；为空一律拒绝安装。
     private var pendingSha256: String? = null
     
     private val jsonFormat = Json { ignoreUnknownKeys = true }
@@ -270,6 +271,14 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
         // 2026-10-04 审计 P1 修复：无幂等检查——遥控器连按「立即更新」会并发双下载、双轮询协程，
         // 最终可能连弹两个安装器
         if (_updateState.value is UpdateState.Downloading) return
+        // 2026-11-08 审计修复：源头 UpdateRepository 已挡掉无指纹配置，这里再兜一道，
+        // 防止其它调用路径绕过。复用「校验失败」文案，不新增对外文案。
+        if (!isValidApkSha256(sha256)) {
+            _updateState.value = UpdateState.Error(
+                getApplication<Application>().getString(R.string.update_checksum_mismatch)
+            )
+            return
+        }
         _updateState.value = UpdateState.Downloading(0)
         pendingSha256 = sha256
         
@@ -379,9 +388,16 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    /** 2026-10-04 审计 P1 修复：update.json 携带 apkSha256 时安装前强制校验（缺失则跳过，兼容旧发布物） */
+    /**
+     * 安装前强制校验 APK 指纹。
+     * 2026-11-08 审计修复：原先 expected 为空直接返回 true，与对外 README
+     * 「按配置里的文件指纹校验后安装」的承诺不符；现在缺指纹一律判失败，不静默放行。
+     */
     private fun verifyApkSha256(uri: Uri, expected: String?): Boolean {
-        if (expected.isNullOrBlank()) return true
+        if (expected.isNullOrBlank()) {
+            Log.e("UpdateViewModel", "更新配置没有文件指纹，拒绝安装")
+            return false
+        }
         return try {
             val digest = java.security.MessageDigest.getInstance("SHA-256")
             getApplication<Application>().contentResolver.openInputStream(uri)?.use { input ->

@@ -71,4 +71,18 @@ class PathSafetyTest {
         assertFalse(isHiddenTempFile("._我的文档.docx"))
         assertFalse(isHiddenTempFile("正常文件.mp4"))
     }
+
+    @Test
+    fun 崩溃日志及轮转件被识别为内部文件() {
+        assertTrue(isPrivateAppFile("crash_log.txt"))
+        assertTrue(isPrivateAppFile("crash_log.1.txt"))
+        assertTrue(isPrivateAppFile("crash_log.2.txt"))
+    }
+
+    @Test
+    fun 普通文件不被内部文件规则误伤() {
+        assertFalse(isPrivateAppFile("crash_log_backup.mp4"))
+        assertFalse(isPrivateAppFile("my_crash_log.txt"))
+        assertFalse(isPrivateAppFile("正常文件.txt"))
+    }
 }

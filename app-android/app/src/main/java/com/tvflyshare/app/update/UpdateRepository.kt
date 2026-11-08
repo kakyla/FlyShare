@@ -27,6 +27,8 @@ class UpdateRepository {
         ).filter { it.isNotBlank() }.distinct()
         // 单个更新源的 HTTP 连接/读取超时（毫秒）
         private const val HTTP_TIMEOUT_MS = 5000
+        // 2026-11-08 审计修复：对外 README 承诺「按配置里的文件指纹校验后安装」，
+        // 而旧实现里 apkSha256 缺失会直接跳过校验，承诺与代码不符。指纹现在是必需项。
     }
 
     private val jsonFormat = Json { ignoreUnknownKeys = true }
@@ -74,8 +76,18 @@ class UpdateRepository {
                 if (info.apkUrl.startsWith("http://")) {
                     info = info.copy(apkUrl = "https://" + info.apkUrl.removePrefix("http://"))
                 }
-                Log.i(TAG, "更新配置来自 $urlString")
-                Result.success(info)
+                // 必填校验：缺指纹或格式不对的配置一律视为不可用，自动尝试下一个更新源，
+                // 绝不在「没有指纹」的情况下放行到下载/安装环节。
+                val sha = info.apkSha256?.trim()
+                if (sha == null || !isValidApkSha256(sha)) {
+                    Log.w(TAG, "更新配置缺少合法的文件指纹：$urlString")
+                    Result.failure<UpdateInfo?>(
+                        AppException.fromThrowable(IllegalArgumentException("更新配置缺少合法的文件指纹"))
+                    )
+                } else {
+                    Log.i(TAG, "更新配置来自 $urlString")
+                    Result.success(info.copy(apkSha256 = sha.lowercase()))
+                }
             }
         } catch (e: Exception) {
             if (e is kotlinx.coroutines.CancellationException) throw e

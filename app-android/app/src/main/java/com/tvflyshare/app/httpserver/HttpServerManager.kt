@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicLong
 import com.tvflyshare.app.util.FileOperations
 import com.tvflyshare.app.util.isHiddenTempFile
 import com.tvflyshare.app.util.isPathInsideRoot
+import com.tvflyshare.app.util.isPrivateAppFile
 import com.tvflyshare.app.interconnect.DeviceDiscoveryManager
 import com.tvflyshare.app.interconnect.RemoteFileEntry
 
@@ -252,7 +253,7 @@ object HttpServerManager {
                         val offset = (offsetStr?.toIntOrNull() ?: 0).coerceAtLeast(0)
 
                         val fileList = targetDir.listFiles()
-                            ?.filter { !isHiddenTempFile(it.name) }
+                            ?.filter { !isHiddenTempFile(it.name) && !isPrivateAppFile(it.name) }
                             ?.map { f ->
                             val relPath = f.canonicalPath.substringAfter(dir.canonicalPath).removePrefix(File.separator)
                             RemoteFileEntry(
@@ -282,7 +283,9 @@ object HttpServerManager {
                     val targetFile = File(dir, reqPath)
 
                     // 安全校验
-                    if (!targetFile.exists() || targetFile.isDirectory || !isPathInsideRoot(dir, targetFile)) {
+                    // 崩溃日志等 App 内部文件不得经无鉴权网页端下载（2026-11-08 安全审计）
+                    if (!targetFile.exists() || targetFile.isDirectory || isPrivateAppFile(targetFile.name)
+                        || !isPathInsideRoot(dir, targetFile)) {
                         return newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_file_not_found)}"}""")
                     }
 
@@ -393,7 +396,7 @@ object HttpServerManager {
                         return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_path_required)}"}""")
                     }
                     val targetFile = File(dir, reqPath)
-                    if (!targetFile.exists() || !isPathInsideRoot(dir, targetFile)) {
+                    if (!targetFile.exists() || isPrivateAppFile(targetFile.name) || !isPathInsideRoot(dir, targetFile)) {
                         return newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_file_not_found)}"}""")
                     }
                     // 2026-10-04 审计 P1 修复：path="."（或 sub/..）时 target 即共享根本身，
@@ -421,7 +424,8 @@ object HttpServerManager {
                         return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_path_required)}"}""")
                     }
                     val sourceFile = File(dir, reqPath)
-                    if (!sourceFile.exists() || !isPathInsideRoot(dir, sourceFile)) {
+                    // 不挡就能把崩溃日志改名成普通文件名再下载，列表/下载过滤会被绕过
+                    if (!sourceFile.exists() || isPrivateAppFile(sourceFile.name) || !isPathInsideRoot(dir, sourceFile)) {
                         return newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_file_not_found)}"}""")
                     }
                     // 2026-10-04 审计 P1 修复：与 delete 同规——共享根本身不可作为重命名源
@@ -479,7 +483,7 @@ object HttpServerManager {
 
                     if (targetDir.exists() && targetDir.isDirectory) {
                         val files = targetDir.listFiles()
-                            ?.filter { !isHiddenTempFile(it.name) }
+                            ?.filter { !isHiddenTempFile(it.name) && !isPrivateAppFile(it.name) }
                             ?.map { f ->
                             val relPath = f.canonicalPath.substringAfter(dir.canonicalPath).removePrefix(File.separator)
                             UploadedFile(
@@ -504,7 +508,8 @@ object HttpServerManager {
                         return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", """{"error":"${appContext?.getString(R.string.http_api_error_path_required)}"}""")
                     }
                     val targetFile = File(dir, reqPath)
-                    if (targetFile.exists() && targetFile.isFile && isPathInsideRoot(dir, targetFile)) {
+                    if (targetFile.exists() && targetFile.isFile && !isPrivateAppFile(targetFile.name)
+                        && isPathInsideRoot(dir, targetFile)) {
                         val encodedFileName = URLEncoder.encode(targetFile.name, "UTF-8").replace("+", "%20")
                         val fileLen = targetFile.length()
                         var startFrom: Long = 0
@@ -570,7 +575,8 @@ object HttpServerManager {
                     }
                     val targetFile = File(dir, reqPath)
                     // 2026-10-04 审计 P1 修复：path="." 时 target 即共享根本身，禁止删除（对齐 tvfile/delete）
-                    if (targetFile.exists() && isPathInsideRoot(dir, targetFile) && targetFile.canonicalPath != dir.canonicalPath) {
+                    if (targetFile.exists() && !isPrivateAppFile(targetFile.name)
+                        && isPathInsideRoot(dir, targetFile) && targetFile.canonicalPath != dir.canonicalPath) {
                         val ctx = appContext
                         if (ctx == null) {
                             return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "application/json", """{"error":"server not ready"}""")

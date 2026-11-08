@@ -49,8 +49,9 @@
 # 改之前先 grep Polymorphic/classDiscriminator/serializersModule 确认是否已引入多态。
 
 # ---- 3.2 release 包裁剪调试日志（2026-11-01 审计 P3 修复）----
-# 背景：全项目 183 处 android.util.Log 调用，正式包里照样打印局域网地址、文件路径、
-#       传输进度；改代码逐个加 BuildConfig.DEBUG 判断要动 34 处源文件，风险高、易漏。
+# 背景：全项目有大量 android.util.Log 调用（数字会随开发变动，别在这里写死；
+#       tools/spec-audit 每次收尾会重数），正式包里照样打印局域网地址、文件路径、
+#       传输进度；改代码逐个加 BuildConfig.DEBUG 判断要动几十处源文件，风险高、易漏。
 # 做法：交给 R8。开启优化后（本工程用 proguard-android-optimize.txt），
 #       assumenosideeffects 会在 release 阶段把这几类调用连同它们的字符串拼接参数一起删掉，
 #       源码一行不改，debug 包不受影响（debug 未开 minify）。
