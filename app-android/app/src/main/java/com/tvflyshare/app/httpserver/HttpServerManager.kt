@@ -31,6 +31,7 @@ import com.tvflyshare.app.util.FileOperations
 import com.tvflyshare.app.util.isHiddenTempFile
 import com.tvflyshare.app.util.isPathInsideRoot
 import com.tvflyshare.app.util.isPrivateAppFile
+import com.tvflyshare.app.util.isAllowedRequestHeaders
 import com.tvflyshare.app.interconnect.DeviceDiscoveryManager
 import com.tvflyshare.app.interconnect.RemoteFileEntry
 
@@ -209,6 +210,13 @@ object HttpServerManager {
     ) : NanoHTTPD(port) {
 
         override fun serve(session: IHTTPSession): Response {
+            // 门牌校验：DNS 重绑定后请求仍带着攻击者域名作 Host，只认 IP 字面量即可掐断，
+            // 用户无需登录、无需多一步；本项目二维码/页面地址/互传全是 IP 直连，无域名用法。
+            // 带 Origin 的浏览器请求（上传、删除等）还必须是本服务自己的来源。
+            if (!isAllowedRequestHeaders(session.headers)) {
+                return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", """{"error":"invalid host"}""")
+            }
+
             // 每次请求实时读取最新保存路径（用户在设置里改路径后立即生效，无需重启服务）
             val dir = StoragePermissionUtils.getStorageDir(serverAppContext)
             val uri = session.uri
