@@ -18,7 +18,7 @@ android {
         // 统一版本号（2026-10-05 用户明确）：只维护 APP_VERSION_NAME 一个号，
         // versionCode 由它自动推导（X.Y.Z -> X*10000 + Y*100 + Z），禁止再单独手写 versionCode。
         // 例：2.4.0 -> 20400。推导值单调递增，应用内更新比较逻辑不受影响。
-        val APP_VERSION_NAME = "2.6.17"
+        val APP_VERSION_NAME = "2.6.18"
         versionName = APP_VERSION_NAME
         versionCode = APP_VERSION_NAME.split(".").let { it[0].toInt() * 10000 + it[1].toInt() * 100 + it[2].toInt() }
 
