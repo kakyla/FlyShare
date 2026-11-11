@@ -1,7 +1,7 @@
 {
-  "versionCode": 20618,
-  "versionName": "2.6.18",
-  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.18/FlyShare-2.6.18.apk",
-  "apkSha256": "035750a59600eaa80561a98e92a86d742c177cb6beaa6896a5c223ca0e54132a",
-  "updateLog": "2.6.18 更新内容\n\n网页服务加了校验：只认数字 IP。"
+  "versionCode": 20619,
+  "versionName": "2.6.19",
+  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.19/FlyShare-2.6.19.apk",
+  "apkSha256": "82ed0f7049f49ae9d37d9f79a9fdc3a5852223c2a912cd884e609ac66e7fc31b",
+  "updateLog": "网页服务切到后台也能继续传，切回应用会自动重连。"
 }

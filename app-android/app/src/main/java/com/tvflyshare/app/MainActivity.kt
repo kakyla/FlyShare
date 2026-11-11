@@ -1,5 +1,6 @@
 package com.tvflyshare.app
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import com.tvflyshare.app.service.TransferForegroundService
 import com.tvflyshare.app.ui.navigation.TVTransferNavHost
 import com.tvflyshare.app.uiconfig.global.TVTransferAssistantTheme
 import com.tvflyshare.app.util.PermissionManager
@@ -33,8 +35,14 @@ import com.tvflyshare.app.uiconfig.global.TvTheme
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        /** 后台传输通知上的「停止后台传输」按钮带此标记。 */
+        const val EXTRA_STOP_BACKGROUND = "com.tvflyshare.app.extra.STOP_BACKGROUND"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleStopBackground(intent)
 
         val isTv = isTvDevice()
 
@@ -124,6 +132,24 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleStopBackground(intent)
+    }
+
+    /**
+     * 通知上的「停止后台传输」：关掉设置开关并撤回前台状态。
+     * 走 Activity 而不是后台 startService，避开 Android 8+ 后台服务限制；
+     * 网页服务本身保留（页面还开着时本来就该在），退出页面后仍由 30 秒规则自动收掉。
+     */
+    private fun handleStopBackground(source: Intent?) {
+        if (source?.getBooleanExtra(EXTRA_STOP_BACKGROUND, false) != true) return
+        source.removeExtra(EXTRA_STOP_BACKGROUND)
+        (application as? TVTransferApp)?.settingsRepository?.setNotificationEnabled(false)
+        TransferForegroundService.setNotificationEnabled(this, false)
     }
 
     /** 判断当前设备是否为电视（用于决定是否启用 edge-to-edge 等） */

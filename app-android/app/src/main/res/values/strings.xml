@@ -61,9 +61,10 @@
     <string name="orientation_auto">自适应</string>
     <string name="orientation_landscape">横屏</string>
     <string name="orientation_portrait">竖屏</string>
-    <string name="settings_notification">传输服务通知</string>
-    <string name="settings_notification_perm_title">无法开启通知</string>
-    <string name="settings_notification_perm_desc">未授予通知权限，无法显示常驻通知。请到系统设置开启本应用通知，再回来打开开关。</string>
+    <string name="settings_notification">切到后台继续传</string>
+    <string name="settings_notification_desc">打开后，切到别的 App 时网页服务会继续运行；安卓会要求显示一条通知，这条通知关不掉。留在应用内时没有任何通知。</string>
+    <string name="settings_notification_perm_title">无法开启后台传输</string>
+    <string name="settings_notification_perm_desc">未授予通知权限，后台传输期间无法显示那条必需的通知。请到系统设置开启本应用通知，再回来打开开关。</string>
     <string name="settings_notification_perm_go">去系统设置</string>
     <string name="settings_auto_fix_apk_suffix">自动修正安装包后缀</string>
     <string name="settings_save_path">文件保存路径</string>
@@ -381,9 +382,12 @@
     <string name="network_scanning_count">扫描中...(%1$d)</string>
 
     <!-- Transfer Foreground Service -->
-    <string name="transfer_service_title">文件传输服务</string>
-    <string name="transfer_service_desc">保持文件传输服务运行</string>
-    <string name="transfer_service_running">传输服务运行中，可接收文件</string>
+    <string name="transfer_service_title">后台传输</string>
+    <string name="transfer_service_desc">切到后台时保持网页服务运行</string>
+    <string name="transfer_service_running">网页服务运行中</string>
+    <string name="transfer_service_address">%1$s · 点此回到应用</string>
+    <string name="transfer_service_address_unknown">本机 IP 未获取</string>
+    <string name="transfer_service_stop">停止后台传输</string>
 
     <!-- File & SMB Operations Errors -->
     <string name="error_file_not_found">文件不存在</string>

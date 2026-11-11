@@ -157,6 +157,9 @@ object HttpServerManager {
 
     fun getPort(): Int = actualPort
 
+    /** 自检用：5566 端口当前是否真的有服务在监听（服务被系统回收后 server 可能为空或不存活）。 */
+    fun isRunning(): Boolean = server?.isAlive == true
+
     /** 构造 TvNanoServer 并挂上自定义 TempFileManager 工厂（用于登记上传临时文件，供进度采样） */
     private fun createServer(port: Int, serverAppContext: Context, html: String): TvNanoServer {
         val s = TvNanoServer(port, serverAppContext, html)

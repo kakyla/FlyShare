@@ -131,6 +131,7 @@ fun SettingsScreen(
 
                         SettingToggleItem(
                             title = stringResource(id = R.string.settings_notification),
+                            desc = stringResource(id = R.string.settings_notification_desc),
                             checked = uiState.notificationEnabled,
                             compact = compact,
                             onCheckedChange = { checked ->

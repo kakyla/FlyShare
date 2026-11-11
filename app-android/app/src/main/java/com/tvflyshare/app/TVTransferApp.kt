@@ -1,6 +1,8 @@
 package com.tvflyshare.app
 
+import android.app.Activity
 import android.app.Application
+import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import java.io.File
@@ -9,6 +11,7 @@ import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import java.util.Date
 import com.tvflyshare.app.settings.SettingsRepository
+import com.tvflyshare.app.service.TransferForegroundService
 import com.tvflyshare.app.util.AppException
 import java.util.Locale
 
@@ -17,10 +20,19 @@ class TVTransferApp : Application() {
     lateinit var settingsRepository: SettingsRepository
         private set
 
+    /** 处于 RESUMED 的 Activity 数量：0→1 视为回到前台，1→0 视为退到后台。 */
+    private var resumedActivityCount = 0
+
+    /** App 当前是否处于后台（供传输服务被系统重建时判断是否要补升前台）。 */
+    @Volatile
+    var isAppInBackground: Boolean = false
+        private set
+
     override fun onCreate() {
         super.onCreate()
         
         settingsRepository = SettingsRepository(this)
+        registerAppForegroundTracker()
         
         // 捕获全局崩溃异常，写入本地文件
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
@@ -29,6 +41,38 @@ class TVTransferApp : Application() {
             android.os.Process.killProcess(android.os.Process.myPid())
             System.exit(1)
         }
+    }
+
+    /**
+     * 跟踪 App 整体前后台（不依赖任何页面）：退到后台时让传输服务升为前台保活，
+     * 回到前台时撤通知并自检 5566。只在确实有页面在用服务时才投递意图，
+     * 避免为了一次前后台切换把不设登录的网页端口凭空打开。
+     */
+    private fun registerAppForegroundTracker() {
+        registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) {
+                if (resumedActivityCount == 0) {
+                    isAppInBackground = false
+                    TransferForegroundService.onAppForeground(this@TVTransferApp)
+                }
+                resumedActivityCount++
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                resumedActivityCount = (resumedActivityCount - 1).coerceAtLeast(0)
+                if (resumedActivityCount == 0) {
+                    isAppInBackground = true
+                    // onPause 时 App 仍可见，此时升前台不受 Android 12+ 后台启动限制
+                    TransferForegroundService.onAppBackground(this@TVTransferApp)
+                }
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
     }
 
     private fun saveCrashLogLocally(thread: Thread, throwable: Throwable) {
