@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
+import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
@@ -218,13 +219,26 @@ class TransferViewModel(application: Application) : AndroidViewModel(application
                 // 网络断开
                 cachedIp = null
                 cachedQr = null
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
-                        ipAddress = null, 
+                        ipAddress = null,
                         qrBitmap = null,
                         networkType = NetworkType.NONE
-                    ) 
+                    )
                 }
+            }
+
+            // 2026-11-19 修复：与 TopBar 2026-11-03 的同源 bug。
+            // 只靠 onAvailable/onLost 会在 WiFi 刚连上、activeNetwork 的 capabilities
+            // 尚未就绪时读到旧的 NONE，且此后无回调再刷新 → 图标卡在"无网"斜线。
+            // 补 capabilities/linkProperties 变化回调，连接真正就绪后重新查询网络类型；
+            // 同时刷新 IP/二维码（page 活动中），确保二维码也跟上新网络。
+            override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+                refreshNetworkState()
+            }
+
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+                refreshNetworkState()
             }
         }
         networkCallback = callback
@@ -238,6 +252,27 @@ class TransferViewModel(application: Application) : AndroidViewModel(application
                 .build(),
             callback
         )
+    }
+
+    /**
+     * 网络能力/链路属性变化后刷新网络状态（2026-11-19 修）。
+     *
+     * 与 [refreshIpAndQr] 的区别：
+     * - 本方法无条件刷新 networkType 图标——即使页面不在前台（pollJob 未活动），
+     *   回到页面时图标也必须是正确的，不能停在"无网"斜线。
+     * - IP/二维码较重（要起协程 + IO 线程读网卡 + 生成图片），仍只在页面活动时刷新。
+     *
+     * WiFi 重连时序：onAvailable 早于 activeNetwork 的 capabilities 就绪，
+     * 那时 getNetworkType() 可能仍返回 NONE；capabilities 真正就绪会再回调本方法，
+     * 此时读到正确的 WIFI，图标恢复。这正是只监听 onAvailable/onLost 会漏掉的场景。
+     */
+    private fun refreshNetworkState() {
+        val context = getApplication<Application>()
+        val currentType = NetworkUtils.getNetworkType(context)
+        _uiState.update { it.copy(networkType = currentType) }
+        if (pollJob?.isActive == true) {
+            refreshIpAndQr()
+        }
     }
 
     /**
@@ -322,7 +357,14 @@ class TransferViewModel(application: Application) : AndroidViewModel(application
                 cachedIp = ip
                 cachedQr = qr
             }
-            _uiState.update { it.copy(ipAddress = ip, qrBitmap = qr) }
+            // 2026-11-19：进页面时一并刷新网络类型，避免停留在旧值（如上次断网留下的 NONE）
+            _uiState.update {
+                it.copy(
+                    ipAddress = ip,
+                    qrBitmap = qr,
+                    networkType = NetworkUtils.getNetworkType(getApplication<Application>()),
+                )
+            }
 
             // 初始加载（服务可能还没启动，连接失败时重试；成功响应即使空列表也立即结束）
             var initial: List<TransferFileItem> = emptyList()
