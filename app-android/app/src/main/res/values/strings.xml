@@ -102,6 +102,8 @@
     <string name="about_version_unknown">未知</string>
     <string name="about_official_website">官方网站</string>
     <string name="about_no_website">暂无官网，可通过应用商店关注更新</string>
+    <string name="about_website_url">https://kakyla.github.io/FlyShare/</string>
+    <string name="about_website_qr_hint">用手机扫一扫，打开官方网站</string>
     <string name="about_agreement">用户协议</string>
     <string name="about_privacy">隐私政策</string>
     <string name="about_app_desc">一款简单、快速的局域网电视文件传输与管理工具。</string>
@@ -110,7 +112,7 @@
     <string name="about_qq_group">QQ群</string>
     <string name="about_qq_group_number">850424485</string>
     <string name="about_privacy_title">隐私政策</string>
-    <string name="about_privacy_content">TV快传非常重视您的隐私。本政策说明我们如何收集、使用和保护您的信息。\n\n1. 信息收集\n本软件作为纯本地局域网工具，除必要的设备型号用于标识连接外，不会主动收集您的个人隐私数据，也不会将您的文件或隐私数据上传至任何外部云端服务器。\n\n2. 权限说明\n为了提供核心的文件管理和传输功能，我们需要申请您的“存储权限”或“所有文件管理权限”。这些权限仅用于在本地读取和写入文件，绝不做其他用途。\n\n3. 信息安全\n我们在您的设备本地安全地保存您的偏好设置（如主题、收藏夹、SMB 连接信息等）。请您妥善保管设备，以防数据泄露。\n\n4. 联系我们\n如果您对本隐私政策有任何疑问，请关注后续更新渠道获取联系方式。</string>
+    <string name="about_privacy_content">TV快传非常重视您的隐私。本政策说明我们如何收集、使用和保护您的信息。\n\n1. 信息收集\n本软件作为纯本地局域网工具，除必要的设备型号用于标识连接外，不会主动收集您的个人隐私数据，也不会将您的文件或隐私数据上传至任何外部云端服务器。\n\n2. 权限说明\n为了提供核心的文件管理和传输功能，我们需要申请您的“存储权限”或“所有文件管理权限”。这些权限仅用于在本地读取和写入文件，绝不做其他用途。\n\n3. 信息安全\n我们在您的设备本地安全地保存您的偏好设置（如主题、收藏夹、SMB 连接信息等）。请您妥善保管设备，以防数据泄露。\n\n4. 联系我们\n如果您对本隐私政策有任何疑问，可通过应用「关于」页列出的邮箱（yygo1@qq.com）或 QQ 群（850424485）与我们联系。</string>
     <string name="about_agreement_title">用户协议</string>
     <string name="about_agreement_content">欢迎使用 TV快传 (FlyShare)。本协议是您与我们之间关于使用本软件服务所订立的协议。\n\n1. 服务内容\n本软件主要为您提供局域网内的文件传输、管理及相关附加功能。\n\n2. 用户规范\n您承诺在使用本软件时遵守国家法律法规，不得利用本软件从事任何违法违规行为。禁止利用本软件传输涉及暴力、色情、侵权等非法文件。\n\n3. 免责声明\n对于因不可抗力、网络状况、通讯线路故障等造成服务中断，我们不承担责任。用户需对通过本软件传输的数据自行负责。\n\n4. 协议修改\n我们保留随时修改本协议的权利，修改后的协议将通过适当的方式进行通知，如您继续使用本软件，即视为同意修改后的协议。</string>
 

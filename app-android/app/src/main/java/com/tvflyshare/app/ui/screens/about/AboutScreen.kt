@@ -25,23 +25,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.rememberCoroutineScope
 import com.tvflyshare.app.uiconfig.components.TvAlertDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.tvflyshare.app.R
+import com.tvflyshare.app.qrcode.QrCodeGenerator
 import com.tvflyshare.app.uiconfig.components.ScreenScaffold
 import com.tvflyshare.app.uiconfig.components.TVBackground
 import com.tvflyshare.app.uiconfig.components.tvFocusStyle
-import com.tvflyshare.app.uiconfig.components.GlobalToastManager
 import com.tvflyshare.app.uiconfig.global.TvTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun AboutScreen(
@@ -50,7 +50,6 @@ fun AboutScreen(
     onNavigateToPrivacy: () -> Unit
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     val versionName = remember {
         try {
@@ -221,19 +220,14 @@ private fun AboutLinksSection(
     onNavigateToPrivacy: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    var showWebsiteQr by remember { mutableStateOf(false) }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingMd)
     ) {
-        val noWebsiteMsg = stringResource(id = R.string.about_no_website)
         AboutLinkItem(
             title = stringResource(id = R.string.about_official_website),
-            onClick = {
-                coroutineScope.launch {
-                    GlobalToastManager.showToast(noWebsiteMsg)
-                }
-            }
+            onClick = { showWebsiteQr = true }
         )
 
         AboutLinkItem(
@@ -246,6 +240,55 @@ private fun AboutLinksSection(
             onClick = onNavigateToPrivacy
         )
     }
+
+    if (showWebsiteQr) {
+        WebsiteQrDialog(onDismiss = { showWebsiteQr = false })
+    }
+}
+
+/** 官方网站二维码弹窗：电视不便输入/打开网页，改为手机扫码直达主页 */
+@Composable
+private fun WebsiteQrDialog(onDismiss: () -> Unit) {
+    val websiteUrl = stringResource(id = R.string.about_website_url)
+    val qrHint = stringResource(id = R.string.about_website_qr_hint)
+    // 二维码内容是固定的主页地址，本地生成一次即可，不随重组重复计算
+    val qrBitmap = remember { QrCodeGenerator.generate(websiteUrl) }
+
+    TvAlertDialog(
+        title = stringResource(id = R.string.about_official_website),
+        confirmText = stringResource(id = R.string.btn_confirm),
+        dismissText = null,
+        onConfirm = onDismiss,
+        onDismiss = onDismiss,
+        content = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingMd)
+            ) {
+                if (qrBitmap != null) {
+                    Image(
+                        bitmap = qrBitmap.asImageBitmap(),
+                        contentDescription = stringResource(id = R.string.about_website_qr_hint),
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(TvTheme.dimens.appIconSize * 3)
+                    )
+                }
+                Text(
+                    text = qrHint,
+                    color = TvTheme.colors.textSecondary,
+                    fontSize = TvTheme.dimens.fontBody,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = websiteUrl,
+                    color = TvTheme.colors.textPrimary,
+                    fontSize = TvTheme.dimens.fontBody,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    )
 }
 
 @Composable
