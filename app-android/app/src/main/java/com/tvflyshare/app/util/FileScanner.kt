@@ -4,7 +4,10 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
@@ -166,11 +169,16 @@ object FileScanner {
      * @param maxDepth 最大深度，默认 6 层
      */
     suspend fun getApkCount(maxDepth: Int = 6, autoFixSuffix: Boolean = false): Int = withContext(Dispatchers.IO) {
+        // 捕获当前 Job，供下方局部递归函数做取消检查（局部普通函数内不能调挂起函数）
+        val job = currentCoroutineContext()[Job]
         try {
             val rootDir = Environment.getExternalStorageDirectory()
             var count = 0
             fun countApkFiles(dir: File, depth: Int) {
                 if (depth <= 0 || !dir.exists() || !dir.isDirectory) return
+                // 取消检查点：阻塞遍历不会自然响应 Job.cancel，快速进出页面时旧扫描须尽快中止，
+                // 避免多批全盘扫描叠加、以及 autoFix 改名并发竞争。抛 CancellationException 由外层重抛。
+                if (job?.isActive == false) throw CancellationException()
                 val files = dir.listFiles() ?: return
                 for (file in files) {
                     if (file.isFile) {
@@ -197,11 +205,13 @@ object FileScanner {
      * @param maxDepth 最大深度，默认 6 层
      */
     suspend fun getApkFiles(maxDepth: Int = 6, autoFixSuffix: Boolean = false): Result<List<FileEntry>> = withContext(Dispatchers.IO) {
+        val job = currentCoroutineContext()[Job]
         try {
             val rootDir = Environment.getExternalStorageDirectory()
             val results = mutableListOf<FileEntry>()
             fun collectApkFiles(dir: File, depth: Int) {
                 if (depth <= 0 || !dir.exists() || !dir.isDirectory) return
+                if (job?.isActive == false) throw CancellationException() // 取消检查点，同 countApkFiles
                 val files = dir.listFiles() ?: return
                 for (file in files) {
                     if (file.isFile) {
@@ -249,11 +259,13 @@ object FileScanner {
      * @return 实际成功改名的文件数
      */
     suspend fun fixApkSuffix(maxDepth: Int = 6): Int = withContext(Dispatchers.IO) {
+        val job = currentCoroutineContext()[Job]
         try {
             val rootDir = Environment.getExternalStorageDirectory()
             var fixed = 0
             fun walk(dir: File, depth: Int) {
                 if (depth <= 0 || !dir.exists() || !dir.isDirectory) return
+                if (job?.isActive == false) throw CancellationException() // 取消检查点，同 countApkFiles
                 val files = dir.listFiles() ?: return
                 for (file in files) {
                     if (file.isFile) {

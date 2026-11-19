@@ -126,8 +126,8 @@ Gitee 那份就是本仓库根目录的 `update.json`（每次发版同步更新
 ```json
 {
   "versionCode": 20619,
-  "versionName": "2.6.19",
-  "apkUrl": "https://<你的地址>/FlyShare-2.6.19.apk",
+  "versionName": "2.6.20",
+  "apkUrl": "https://<你的地址>/FlyShare-2.6.20.apk",
   "apkSha256": "<APK 的 SHA-256 指纹>",
   "updateLog": "更新内容说明"
 }

@@ -372,7 +372,8 @@ class TransferViewModel(application: Application) : AndroidViewModel(application
                     // 无论是否在目录切换，都同步原始 id 集合，避免下次误判为"新文件"
                     lastRawIds = currentFiles.map { it.id }.toSet()
                     // 服务端已确认消失的"刚删除"id 放行移出；仍在服务端的保留继续守卫
-                    recentlyDeletedIds.retainAll { id -> currentFiles.none { it.id == id } }
+                    // retainAll 保留谓词为 true 的元素：仍在服务端(any)才保留继续守卫，已消失的移出。
+                    recentlyDeletedIds.retainAll { id -> currentFiles.any { it.id == id } }
 
                     val hiddenNow = _uiState.value.hiddenIds
                     val sortedFiles = currentFiles

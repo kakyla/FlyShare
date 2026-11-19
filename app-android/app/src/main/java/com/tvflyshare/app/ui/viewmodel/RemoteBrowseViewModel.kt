@@ -727,6 +727,9 @@ class RemoteBrowseViewModel(application: Application) : AndroidViewModel(applica
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
         connection.connectTimeout = HTTP_TIMEOUT_MS
+        // 读取超时：对端假死时 input.read() 会永久阻塞，ensureActive() 打断不了阻塞 IO，
+        // 必须靠 readTimeout 让底层抛 SocketTimeoutException（与本文件其它连接一致）。
+        connection.readTimeout = HTTP_TIMEOUT_MS
 
         if (connection.responseCode != HttpURLConnection.HTTP_OK &&
             connection.responseCode != HttpURLConnection.HTTP_PARTIAL

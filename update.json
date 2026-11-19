@@ -1,7 +1,7 @@
 {
-  "versionCode": 20619,
-  "versionName": "2.6.19",
-  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.19/FlyShare-2.6.19.apk",
-  "apkSha256": "82ed0f7049f49ae9d37d9f79a9fdc3a5852223c2a912cd884e609ac66e7fc31b",
-  "updateLog": "网页服务切到后台也能继续传，切回应用会自动重连。"
+  "versionCode": 20620,
+  "versionName": "2.6.20",
+  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.20/FlyShare-2.6.20.apk",
+  "apkSha256": "213147ecfd6c85526486b65c313814120aca067dc1001c68bde431e107ddcb3c",
+  "updateLog": "修复了传文件提示、远程下载、网络页卡顿等几处已发现的问题"
 }

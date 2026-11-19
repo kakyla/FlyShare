@@ -211,7 +211,7 @@ fun AppUninstallScreen(
                             verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingMd),
                             horizontalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingSm),
                         ) {
-                            items(apps) { app ->
+                            items(apps, key = { it.packageName }) { app ->
                                 AppItemGrid(
                                     app = app,
                                     onClick = {
@@ -229,7 +229,7 @@ fun AppUninstallScreen(
                                 .padding(horizontal = TvTheme.dimens.spacingXl, vertical = TvTheme.dimens.spacingMd),
                             verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingMd),
                         ) {
-                            items(apps) { app ->
+                            items(apps, key = { it.packageName }) { app ->
                                 AppItemRow(
                                     app = app,
                                     onClick = {

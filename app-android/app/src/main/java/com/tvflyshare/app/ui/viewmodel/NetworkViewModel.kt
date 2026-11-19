@@ -119,11 +119,18 @@ class NetworkViewModel(application: Application) : AndroidViewModel(application)
     val uiState: StateFlow<NetworkUiState> = _uiState.asStateFlow()
 
     init {
-        // Initialize static info
-        val ip = NetworkUtils.getLocalIpAddress() ?: context.getString(R.string.network_unknown_ip)
+        // Initialize static info：设备名不依赖系统查询，先设置
         val model = Build.MODEL ?: "Android Device"
         val name = if (model.length > 20) model.take(20) else model
-        _uiState.update { it.copy(localIp = ip, deviceName = name) }
+        _uiState.update { it.copy(deviceName = name) }
+
+        // getLocalIpAddress() 内部是 NetworkInterface.getNetworkInterfaces()，主线程调用会卡顿
+        // （TransferViewModel 已记录该坑：模拟器上重复调用 120ms→2000ms），移到 IO 线程。
+        viewModelScope.launch {
+            val ip = withContext(Dispatchers.IO) { NetworkUtils.getLocalIpAddress() }
+                ?: context.getString(R.string.network_unknown_ip)
+            _uiState.update { it.copy(localIp = ip) }
+        }
 
         // Start observing scanner state
         viewModelScope.launch {
@@ -281,10 +288,13 @@ class NetworkViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun startScan() {
-        val hasNetwork = NetworkUtils.getLocalIpAddress() != null
-        _uiState.update { it.copy(scanFailedNoNetwork = !hasNetwork) }
-        if (hasNetwork) {
-            scanner.start()
+        // 同 init：IP 查询挪到 IO 线程，避免点"重新扫描"时主线程卡顿
+        viewModelScope.launch {
+            val hasNetwork = withContext(Dispatchers.IO) { NetworkUtils.getLocalIpAddress() } != null
+            _uiState.update { it.copy(scanFailedNoNetwork = !hasNetwork) }
+            if (hasNetwork) {
+                scanner.start()
+            }
         }
     }
 
