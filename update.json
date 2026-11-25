@@ -1,7 +1,7 @@
 {
-  "versionCode": 20620,
-  "versionName": "2.6.20",
-  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.20/FlyShare-2.6.20.apk",
-  "apkSha256": "213147ecfd6c85526486b65c313814120aca067dc1001c68bde431e107ddcb3c",
-  "updateLog": "修复了传文件提示、远程下载、网络页卡顿等几处已发现的问题"
+  "versionCode": 20621,
+  "versionName": "2.6.21",
+  "apkUrl": "https://gitee.com/kakyla/FlyShare/releases/download/v2.6.21/FlyShare-2.6.21.apk",
+  "apkSha256": "078eaf5033c82fa3d234a36d70c4eef30c84f0fdf54be4c60964ee35f95b9bdb",
+  "updateLog": "添加官网扫码二维码入口，优化界面样式并修复网络图标显示问题"
 }

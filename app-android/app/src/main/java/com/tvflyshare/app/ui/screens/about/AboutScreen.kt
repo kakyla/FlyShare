@@ -267,12 +267,23 @@ private fun WebsiteQrDialog(onDismiss: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(TvTheme.dimens.spacingMd)
             ) {
                 if (qrBitmap != null) {
-                    Image(
-                        bitmap = qrBitmap.asImageBitmap(),
-                        contentDescription = stringResource(id = R.string.about_website_qr_hint),
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(TvTheme.dimens.appIconSize * 3)
-                    )
+                    // 与快速传输页一致的二维码容器：surfaceLight 圆角底板 + 内边距。
+                    // 原先 appIconSize*3=360dp 撑破弹窗高度上限，把下方网址挤出可视区（电视上看不到网址）。
+                    Box(
+                        modifier = Modifier
+                            .size(TvTheme.dimens.appIconSize * 1.6f)
+                            .clip(RoundedCornerShape(TvTheme.dimens.radiusLg))
+                            .background(TvTheme.colors.surfaceLight)
+                            .padding(TvTheme.dimens.spacingMd),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            bitmap = qrBitmap.asImageBitmap(),
+                            contentDescription = stringResource(id = R.string.about_website_qr_hint),
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
                 Text(
                     text = qrHint,

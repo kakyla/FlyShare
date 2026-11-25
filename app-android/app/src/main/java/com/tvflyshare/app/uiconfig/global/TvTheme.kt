@@ -98,6 +98,8 @@ data class TvDimens(
     val moreGridTileHeight: Dp,
     val gridTileIconSize: Dp,
     val actionPanelWidth: Dp,
+    // 首页顶栏时间宽度：HH:mm:ss 定宽，避免比例字体数字宽窄不同导致旁边 WiFi 图标左右抖动
+    val headerTimeWidth: Dp,
     val contentPanelHeight: Dp,
     val dialogWidthMd: Dp,
     val dialogWidthLg: Dp,
@@ -331,6 +333,7 @@ val defaultTvDimens = TvDimens(
     moreGridTileHeight = 160.dp,
     gridTileIconSize = 56.dp,
     actionPanelWidth = 200.dp,
+    headerTimeWidth = 96.dp,
     contentPanelHeight = 450.dp,
     dialogWidthMd = 400.dp,
     dialogWidthLg = 480.dp,
